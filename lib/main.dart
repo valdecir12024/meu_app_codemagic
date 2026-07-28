@@ -99,33 +99,94 @@ class TelaPrincipal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F7), // Fundo cinza claro estilo iOS
       appBar: AppBar(
-        title: const Text('Área Logada'),
+        title: const Text('NeuroApp - Painel'),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        automaticallyImplyLeading: false, // Remove o botão de voltar automático
+        automaticallyImplyLeading: false, // Sem botão de voltar
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.exit_to_app),
+            onPressed: () {
+              Navigator.pop(context); // Sair do app
+            },
+          ),
+        ],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Olá, Paciente/Profissional!',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Selecione uma das atividades abaixo:',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 24),
+            
+            // Grade de Cards Clicáveis
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2, // 2 colunas
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: [
+                  _criarCardMenu(
+                    icon: Icons.psychology, 
+                    titulo: 'Avaliação', 
+                    cor: Colors.blue,
+                  ),
+                  _criarCardMenu(
+                    icon: Icons.analytics, 
+                    titulo: 'Resultados', 
+                    cor: Colors.orange,
+                  ),
+                  _criarCardMenu(
+                    icon: Icons.fitness_center, 
+                    titulo: 'Treinamento', 
+                    cor: Colors.green,
+                  ),
+                  _criarCardMenu(
+                    icon: Icons.settings, 
+                    titulo: 'Ajustes', 
+                    cor: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Função auxiliar para desenhar cada quadradinho (Card) do menu
+  Widget _criarCardMenu({required IconData icon, required String titulo, required Color cor}) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: () {
+          // Ação ao clicar no card (programaremos nas próximas etapas)
+        },
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.check_circle_outline, size: 100, color: Colors.green),
-              const SizedBox(height: 24),
-              const Text(
-                'Você entrou com sucesso!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 48),
-              
-              // Botão para simular a saída (Sair)
-              TextButton.icon(
-                onPressed: () {
-                  Navigator.pop(context); // Volta para a tela de login
-                },
-                icon: const Icon(Icons.exit_to_app, color: Colors.red),
-                label: const Text('Sair do App', style: TextStyle(color: Colors.red, fontSize: 16)),
+              Icon(icon, size: 40, color: cor),
+              const SizedBox(height: 12),
+              Text(
+                titulo,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -134,4 +195,5 @@ class TelaPrincipal extends StatelessWidget {
     );
   }
 }
+
 
