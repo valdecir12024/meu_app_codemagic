@@ -10,15 +10,14 @@ class TelaQuestionario extends StatefulWidget {
 }
 
 class _TelaQuestionarioState extends State<TelaQuestionario> {
-  int _indicePerguntaAtual = 0; // Controla qual pergunta está na tela
+  int _indicePerguntaAtual = 0;
+  int _pontuacaoTotal = 0; // Armazena a soma dos pontos das respostas
 
   @override
   Widget build(BuildContext context) {
-    // Busca as perguntas correspondentes ao teste clicado
     final listaPerguntas = BancoPerguntas.triagens[widget.nomeDoTeste] ?? 
         ['Nenhuma pergunta cadastrada para este teste inicial.'];
 
-    // Calcula o progresso dinâmico da barra (ex: 1/3, 2/3, 3/3)
     double progresso = (_indicePerguntaAtual + 1) / listaPerguntas.length;
 
     return Scaffold(
@@ -33,7 +32,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Barra de progresso dinâmica que enche a cada pergunta respondida
             LinearProgressIndicator(
               value: progresso,
               backgroundColor: Colors.black12,
@@ -49,36 +47,60 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  listaPerguntas[_indicePerguntaAtual], // Exibe a pergunta baseada no índice
+                  listaPerguntas[_indicePerguntaAtual],
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            _construirOpcaoResposta('Nunca', () => _avancarPergunta(listaPerguntas)),
-            _construirOpcaoResposta('Raramente', () => _avancarPergunta(listaPerguntas)),
-            _construirOpcaoResposta('Às vezes', () => _avancarPergunta(listaPerguntas)),
-            _construirOpcaoResposta('Frequentemente', () => _avancarPergunta(listaPerguntas)),
-            _construirOpcaoResposta('Sempre', () => _avancarPergunta(listaPerguntas)),
+            // Passamos o peso de cada alternativa para a função de avançar
+            _construirOpcaoResposta('Nunca', () => _processarResposta(0, listaPerguntas)),
+            _construirOpcaoResposta('Raramente', () => _processarResposta(1, listaPerguntas)),
+            _construirOpcaoResposta('Às vezes', () => _processarResposta(2, listaPerguntas)),
+            _construirOpcaoResposta('Frequentemente', () => _processarResposta(3, listaPerguntas)),
+            _construirOpcaoResposta('Sempre', () => _processarResposta(4, listaPerguntas)),
           ],
         ),
       ),
     );
   }
 
-  // Função interna para avançar para a próxima pergunta ou fechar o teste se for a última
-  void _avancarPergunta(List<String> totalPerguntas) {
-    setState(() {
-      if (_indicePerguntaAtual < totalPerguntas.length - 1) {
-        _indicePerguntaAtual++; // Passa para a próxima pergunta
-      } else {
-        // Se chegou ao fim, exibe o alerta e fecha o bloco voltando para o menu
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Triagem de "${widget.nomeDoTeste}" finalizada com sucesso!')),
+  void _processarResposta(int pontosDaAlternativa, List<String> totalPerguntas) {
+    _pontuacaoTotal += pontosDaAlternativa; // Acumula os pontos da resposta atual
+
+    if (_indicePerguntaAtual < totalPerguntas.length - 1) {
+      setState(() {
+        _indicePerguntaAtual++; // Vai para a próxima pergunta
+      });
+    } else {
+      // Chegou ao fim do teste: exibe o resultado final de triagem
+      _exibirResultadoFinal();
+    }
+  }
+
+  void _exibirResultadoFinal() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Força o usuário a clicar no botão de fechar
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Text(
+            'Pontuação total obtida: $_pontuacaoTotal pontos.\n\nEste resultado serve como um rastreio inicial clínico ou educacional.',
+            style: const TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Fecha a caixinha de diálogo
+                Navigator.pop(this.context); // Fecha a tela do teste e volta para o menu
+              },
+              child: const Text('Ok, fechar', style: TextStyle(color: Colors.deepPurple, fontSize: 16)),
+            ),
+          ],
         );
-      }
-    });
+      },
+    );
   }
 
   Widget _construirOpcaoResposta(String texto, VoidCallback aoPressionar) {
