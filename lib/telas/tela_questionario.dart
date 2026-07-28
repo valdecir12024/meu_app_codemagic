@@ -11,7 +11,7 @@ class TelaQuestionario extends StatefulWidget {
 
 class _TelaQuestionarioState extends State<TelaQuestionario> {
   int _indicePerguntaAtual = 0;
-  int _pontuacaoTotal = 0; // Armazena a soma dos pontos das respostas
+  int _pontuacaoTotal = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,9 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         ['Nenhuma pergunta cadastrada para este teste inicial.'];
 
     double progresso = (_indicePerguntaAtual + 1) / listaPerguntas.length;
+
+    // Verifica se o teste atual é o M-CHAT para mudar as alternativas
+    bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
@@ -53,12 +56,20 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
               ),
             ),
             const SizedBox(height: 24),
-            // Passamos o peso de cada alternativa para a função de avançar
-            _construirOpcaoResposta('Nunca', () => _processarResposta(0, listaPerguntas)),
-            _construirOpcaoResposta('Raramente', () => _processarResposta(1, listaPerguntas)),
-            _construirOpcaoResposta('Às vezes', () => _processarResposta(2, listaPerguntas)),
-            _construirOpcaoResposta('Frequentemente', () => _processarResposta(3, listaPerguntas)),
-            _construirOpcaoResposta('Sempre', () => _processarResposta(4, listaPerguntas)),
+            
+            // Renderização Condicional dos Botões
+            if (ehMchat) ...[
+              // Se for M-CHAT, exibe apenas Sim ou Não
+              _construirOpcaoResposta('Sim', () => _processarResposta(1, listaPerguntas)),
+              _construirOpcaoResposta('Não', () => _processarResposta(0, listaPerguntas)),
+            ] else ...[
+              // Para os outros testes, mantém a escala Likert padrão de 5 pontos
+              _construirOpcaoResposta('Nunca', () => _processarResposta(0, listaPerguntas)),
+              _construirOpcaoResposta('Raramente', () => _processarResposta(1, listaPerguntas)),
+              _construirOpcaoResposta('Às vezes', () => _processarResposta(2, listaPerguntas)),
+              _construirOpcaoResposta('Frequentemente', () => _processarResposta(3, listaPerguntas)),
+              _construirOpcaoResposta('Sempre', () => _processarResposta(4, listaPerguntas)),
+            ],
           ],
         ),
       ),
@@ -66,14 +77,13 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
   }
 
   void _processarResposta(int pontosDaAlternativa, List<String> totalPerguntas) {
-    _pontuacaoTotal += pontosDaAlternativa; // Acumula os pontos da resposta atual
+    _pontuacaoTotal += pontosDaAlternativa;
 
     if (_indicePerguntaAtual < totalPerguntas.length - 1) {
       setState(() {
-        _indicePerguntaAtual++; // Vai para a próxima pergunta
+        _indicePerguntaAtual++;
       });
     } else {
-      // Chegou ao fim do teste: exibe o resultado final de triagem
       _exibirResultadoFinal();
     }
   }
@@ -81,7 +91,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
   void _exibirResultadoFinal() {
     showDialog(
       context: context,
-      barrierDismissible: false, // Força o usuário a clicar no botão de fechar
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -92,8 +102,8 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Fecha a caixinha de diálogo
-                Navigator.pop(this.context); // Fecha a tela do teste e volta para o menu
+                Navigator.pop(context);
+                Navigator.pop(this.context);
               },
               child: const Text('Ok, fechar', style: TextStyle(color: Colors.deepPurple, fontSize: 16)),
             ),
