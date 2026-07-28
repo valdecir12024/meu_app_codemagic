@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../dados/banco_perguntas.dart';
 
 class TelaQuestionario extends StatelessWidget {
   final String nomeDoTeste;
@@ -7,6 +8,10 @@ class TelaQuestionario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Busca as perguntas no banco de dados baseado no nome do teste clicado
+    final listaPerguntas = BancoPerguntas.triagens[nomeDoTeste] ?? 
+        ['Nenhuma pergunta cadastrada para este teste inicial.'];
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
       appBar: AppBar(
@@ -20,22 +25,22 @@ class TelaQuestionario extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const LinearProgressIndicator(
-              value: 0.3,
+              value: 0.33, // Primeira pergunta do bloco
               backgroundColor: Colors.black12,
               valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
             ),
             const SizedBox(height: 24),
-            const Card(
+            Card(
               elevation: 0,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 side: BorderSide(color: Colors.black12),
                 borderRadius: BorderRadius.all(Radius.circular(12)),
               ),
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Com que frequência o indivíduo apresenta dificuldade em manter a atenção em tarefas longas ou atividades lúdicas?',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  listaPerguntas[0], // Exibe dinamicamente a primeira pergunta da lista
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -50,7 +55,7 @@ class TelaQuestionario extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Resposta registrada temporariamente!')),
+                  SnackBar(content: Text('Triagem de "$nomeDoTeste" iniciada com sucesso!')),
                 );
               },
               style: ElevatedButton.styleFrom(
