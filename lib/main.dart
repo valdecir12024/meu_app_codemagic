@@ -98,73 +98,92 @@ class TelaPrincipal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F7), // Fundo cinza claro estilo iOS
-      appBar: AppBar(
-        title: const Text('NeuroApp - Painel'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-        automaticallyImplyLeading: false, // Sem botão de voltar
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              Navigator.pop(context); // Sair do app
-            },
+    // Configura 3 abas de navegação (Neuro, Comportamento, Socioemocional)
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F7),
+        appBar: AppBar(
+          title: const Text('NeuroApp - Triagem'),
+          backgroundColor: Colors.deepPurple,
+          foregroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.exit_to_app),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+          bottom: const TabBar(
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            indicatorColor: Colors.white,
+            indicatorWeight: 3,
+            tabs: [
+              Tab(icon: Icon(Icons.psychology), text: 'Neuro'),
+              Tab(icon: Icon(Icons.accessibility_new), text: 'Comportamento'),
+              Tab(icon: Icon(Icons.emoji_emotions), text: 'Socioemocional'),
+            ],
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        body: TabBarView(
           children: [
-            const Text(
-              'Olá, Paciente/Profissional!',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Selecione uma das atividades abaixo:',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 24),
-            
-            // Grade de Cards Clicáveis
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2, // 2 colunas
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                children: [
-                  _criarCardMenu(
-                    icon: Icons.psychology, 
-                    titulo: 'Avaliação', 
-                    cor: Colors.blue,
-                  ),
-                  _criarCardMenu(
-                    icon: Icons.analytics, 
-                    titulo: 'Resultados', 
-                    cor: Colors.orange,
-                  ),
-                  _criarCardMenu(
-                    icon: Icons.fitness_center, 
-                    titulo: 'Treinamento', 
-                    cor: Colors.green,
-                  ),
-                  _criarCardMenu(
-                    icon: Icons.settings, 
-                    titulo: 'Ajustes', 
-                    cor: Colors.grey,
-                  ),
-                ],
-              ),
-            ),
+            // Aba 1: Neuro
+            _construirListaTestes([
+              'Triagem de Atenção Visual',
+              'Memória de Curto Prazo',
+              'Velocidade de Processamento',
+            ], Colors.blue),
+
+            // Aba 2: Comportamento
+            _construirListaTestes([
+              'Escala de Impulsividade Inicial',
+              'Rastreio de Hiperatividade',
+              'Foco em Tarefas Escolares',
+            ], Colors.orange),
+
+            // Aba 3: Socioemocional
+            _construirListaTestes([
+              'Avaliação de Tolerância à Frustração',
+              'Percepção de Empatia',
+              'Interação com Pares/Colegas',
+            ], Colors.green),
           ],
         ),
       ),
     );
   }
+
+  // Função auxiliar para desenhar a lista de testes dentro de cada categoria
+  Widget _construirListaTestes(List<String> testes, Color corIcone) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: testes.length,
+      itemBuilder: (context, index) {
+        return Card(
+          elevation: 1,
+          margin: const EdgeInsets.only(bottom: 12.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: corIcone.withValues(alpha: 0.1),
+              child: Icon(Icons.assignment, color: corIcone),
+            ),
+            title: Text(
+              testes[index],
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            subtitle: const Text('Toque para iniciar a triagem inicial'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              // Próxima etapa: abrir o questionário do teste clicado
+            },
+          ),
+        );
+      },
+    );
+  }
+}
 
   // Função auxiliar para desenhar cada quadradinho (Card) do menu
   Widget _criarCardMenu({required IconData icon, required String titulo, required Color cor}) {
