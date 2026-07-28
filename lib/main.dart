@@ -166,7 +166,7 @@ class TelaPrincipal extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: corIcone.withValues(alpha: 0.1),
+              backgroundColor: corIcone.withOpacity(0.1),
               child: Icon(Icons.assignment, color: corIcone),
             ),
             title: Text(
