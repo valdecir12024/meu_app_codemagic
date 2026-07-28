@@ -71,10 +71,14 @@ class TelaLogin extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Botão de Entrar
+                       // Botão de Entrar
             ElevatedButton(
               onPressed: () {
-                // Ação do botão (vamos programar depois)
+                // Navega para a Tela Principal de forma segura
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TelaPrincipal()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
@@ -89,3 +93,45 @@ class TelaLogin extends StatelessWidget {
     );
   }
 }
+class TelaPrincipal extends StatelessWidget {
+  const TelaPrincipal({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Área Logada'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+        automaticallyImplyLeading: false, // Remove o botão de voltar automático
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.check_circle_outline, size: 100, color: Colors.green),
+              const SizedBox(height: 24),
+              const Text(
+                'Você entrou com sucesso!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 48),
+              
+              // Botão para simular a saída (Sair)
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context); // Volta para a tela de login
+                },
+                icon: const Icon(Icons.exit_to_app, color: Colors.red),
+                label: const Text('Sair do App', style: TextStyle(color: Colors.red, fontSize: 16)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
