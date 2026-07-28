@@ -35,21 +35,16 @@ class TelaPrincipal extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
+          // Aba 1: Neuro (Atualizada com as suas escalas oficiais)
             _construirListaTestes([
+              'M-CHAT-R/F (TEA Inicial)',
+              'Escala CARS (Autismo Infantil)',
+              'Escala ASRS-18 (Rastreio TDAH)',
+              'Escala ATA (Traços Autísticos)',
+              'Escala ABC (Behavior Checklist)',
               'Triagem de Atenção Visual',
               'Memória de Curto Prazo',
-              'Velocidade de Processamento',
             ], Colors.blue),
-            _construirListaTestes([
-              'Escala de Impulsividade Inicial',
-              'Rastreio de Hiperatividade',
-              'Foco em Tarefas Escolares',
-            ], Colors.orange),
-            _construirListaTestes([
-              'Avaliação de Tolerância à Frustração',
-              'Percepção de Empatia',
-              'Interação com Pares/Colegas',
-            ], Colors.green),
           ],
         ),
       ),
