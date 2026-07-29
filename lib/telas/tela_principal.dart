@@ -45,11 +45,11 @@ class TelaPrincipal extends StatelessWidget {
               'Triagem de Atenção Visual',
               'Memória de Curto Prazo',
             ], Colors.blue),
-          // Aba 2: Comportamento (Atualizada com as escalas oficiais)
+          // Aba 2: Comportamento (Alinhada perfeitamente com os nomes do banco)
             _construirListaTestes([
-              'Escala SNAP-IV (TDAH Escolar)',
-              'Escala Conners (Triagem Conduta)',
-              'Escala BASC-3 (Comportamento Adaptativo)',
+              'SNAP-IV (TDAH 18 Itens)',
+              'Escala Conners (10 Perguntas)',
+              'Escala Basic 3 (12 Perguntas)',
             ], Colors.orange),
           // Aba 3: Socioemocional (Atualizada com as escalas reais do esqueleto)
             _construirListaTestes([
