@@ -1,6 +1,7 @@
 import 'escalas_neuro.dart';
 import 'escalas_comportamento.dart';
 import 'escalas_socioemocional.dart';
+import 'escala_abc.dart';
 
 class BancoPerguntas {
   static final Map<String, List<String>> triagens = {
@@ -14,10 +15,10 @@ class BancoPerguntas {
       'Tem dificuldade em reter sequências de números ou palavras por alguns segundos?',
       'Perde objetos de uso diário com frequência (lápis, brinquedos, chaves)?',
     ],
-    
-    // Injeta as três categorias oficiais de forma limpa e independente
     ...EscalasNeuro.perguntas,
     ...EscalasComportamento.perguntas,
     ...EscalasSocioemocional.perguntas,
+    // Garante que a chave da Escala ABC puxe exatamente as 57 perguntas reais do novo arquivo
+    'Escala ABC (Behavior Checklist)': EscalaAbc.itens.map((item) => item['pergunta'] as String).toList(),
   };
 }
