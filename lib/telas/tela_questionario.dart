@@ -137,6 +137,8 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     bool ehAsrs = widget.nomeDoTeste.contains('ASRS');
     bool ehAta = widget.nomeDoTeste.contains('ATA');
     bool ehAbc = widget.nomeDoTeste.contains('ABC');
+    bool ehAtencao = widget.nomeDoTeste.contains('Atenção');
+    bool ehMemoria = widget.nomeDoTeste.contains('Memória');
 
     if (ehMchat) {
       if (_pontuacaoTotal <= 2) {
@@ -176,11 +178,22 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       } else {
         recomendacao = 'ALTA PROBABILIDADE DE AUTISMO.\nSintomas severos e altamente indicativos de TEA. Necessário encaminhamento imediato para neuropediatra ou psiquiatra infantil.';
       }
+    } else if (ehAtencao) {
+      if (_pontuacaoTotal >= 18) {
+        recomendacao = 'SINAL DE ALERTA PARA DÉFICIT DE ATENÇÃO.\nA pontuação indica um padrão de desatenção visual significativamente superior à média esperada. Sugere-se investigação pedagógica ou clínica neuropsicológica.';
+      } else {
+        recomendacao = 'PONTUAÇÃO DE ATENÇÃO NORMAL.\nNível de foco e engajamento visual dentro dos parâmetros típicos de controle comportamental.';
+      }
+    } else if (ehMemoria) {
+      if (_pontuacaoTotal >= 14) {
+        recomendacao = 'SINAL DE ALERTA PARA SOBRECARGA DE MEMÓRIA DE TRABALHO.\nPontuação elevada sugerindo dificuldades na retenção e manipulação de informações imediatas. Indicado criar estratégias de rotina com comandos curtos e visuais.';
+      } else {
+        recomendacao = 'MEMÓRIA DE CURTO PRAZO DENTRO DA NORMALIDADE.\nCapacidade adaptativa de armazenamento imediato de dados operacionais estável.';
+      }
     } else {
       recomendacao = 'Triagem concluída. Avalie a pontuação de acordo com os critérios específicos do manual desta escala.';
     }
 
-    // AQUI ESTÁ A CORREÇÃO: Removidos os 'const' inválidos e corrigido o 'this.context' para 'context'
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -191,8 +204,8 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Fecha o AlertDialog de forma limpa
-                Navigator.pop(context); // Fecha a tela do teste de forma limpa
+                Navigator.pop(context);
+                Navigator.pop(context); 
               },
               child: const Text('Concluir', style: TextStyle(color: Colors.deepPurple, fontSize: 16)),
             ),
