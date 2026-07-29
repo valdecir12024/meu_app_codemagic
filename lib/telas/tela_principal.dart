@@ -51,6 +51,12 @@ class TelaPrincipal extends StatelessWidget {
               'Escala Conners (Triagem Conduta)',
               'Escala BASC-3 (Comportamento Adaptativo)',
             ], Colors.orange),
+          // Aba 3: Socioemocional (Atualizada com as escalas reais do esqueleto)
+            _construirListaTestes([
+              'Questionário SDQ (Conduta e Emoção)',
+              'Escala SCARED (Triagem de Ansiedade)',
+              'Escala Rosenberg (Autoestima Inicial)',
+            ], Colors.green),
           ],
         ),
       ),
