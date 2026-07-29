@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   pdf: ^3.10.8
   printing: ^5.11.1
+  share_plus: ^13.3.0
 
 dev_dependencies:
   flutter_test:
