@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../dados/banco_perguntas.dart';
+import '../servicos/servico_pdf.dart';
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
