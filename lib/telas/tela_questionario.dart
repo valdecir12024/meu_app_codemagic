@@ -130,10 +130,11 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     }
   }
 
-  void _exibirResultadoFinal() {
+    void _exibirResultadoFinal() {
     String recomendacao = '';
     bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
     bool ehCars = widget.nomeDoTeste.contains('CARS');
+    bool ehAsrs = widget.nomeDoTeste.contains('ASRS');
 
     if (ehMchat) {
       if (_pontuacaoTotal <= 2) {
@@ -144,13 +145,20 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         recomendacao = 'RISCO ALTO.\nEncaminhamento imediato para avaliação diagnóstica especializada.';
       }
     } else if (ehCars) {
-      // Regras de corte oficiais da pontuação total da CARS
       if (_pontuacaoTotal < 30) {
         recomendacao = 'PONTUAÇÃO ABAIXO DO PONTO DE CORTE.\nDesenvolvimento dentro dos limites de normalidade estrutural para autismo.';
       } else if (_pontuacaoTotal <= 36.5) {
-        recomendacao = 'GRAU DE AUTISMO: LEVE A MODERADO.\nIndica presença de sintomas compatíveis com TEA de nível leve ou moderado. Sugere-se planejamento de intervenção e acompanhamento interdisciplinar.';
+        recomendacao = 'GRAU DE AUTISMO: LEVE A MODERADO.\nIndica presença de sintomas compatíveis com TEA de nível leve ou moderado.';
       } else {
-        recomendacao = 'GRAU DE AUTISMO: GRAVE.\nSintomas severos e altamente impactantes no funcionamento diário. Recomendável plano intensivo de terapia comportamental e acompanhamento médico especializado.';
+        recomendacao = 'GRAU DE AUTISMO: GRAVE.\nSintomas severos. Recomendável plano intensivo de terapia e acompanhamento especializado.';
+      }
+    } else if (ehAsrs) {
+      // Regra de corte oficial baseada na pontuação total acumulada
+      // Na ASRS-18, uma pontuação total acima de 24 pontos nas 18 questões indica forte sinal de alerta para TDAH
+      if (_pontuacaoTotal >= 24) {
+        recomendacao = 'SINAL DE ALERTA PARA TDAH SINALIZADO.\nA pontuação total indica uma frequência elevada de sintomas de desatenção e/ou hiperatividade. Recomenda-se encaminhamento para avaliação neuropsicológica ou médica detalhada.';
+      } else {
+        recomendacao = 'RASTREIO DENTRO DA NORMALIDADE.\nSintomas abaixo do ponto de corte epidemiológico para TDAH. Monitore se houver prejuízos funcionais no dia a dia.';
       }
     } else {
       recomendacao = 'Triagem concluída. Avalie a pontuação de acordo com os critérios específicos do manual desta escala.';

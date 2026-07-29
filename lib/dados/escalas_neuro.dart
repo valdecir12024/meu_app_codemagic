@@ -42,14 +42,28 @@ class EscalasNeuro {
     'XV. Impressão Geral: Avaliação subjetiva do clínico com base nos sintomas observados.',
   ];
 
-  // 6 Perguntas de Rastreio Rápido Crítico da ASRS-18 (Parte A)
+    // 18 Perguntas Oficiais Completas da Escala ASRS-18
   static final List<String> perguntasAsrs = [
+    // PARTE A (Rastreio Rápido - Itens 1 a 6)
     '1. Com que frequência você tem dificuldade para finalizar os detalhes finais de um projeto, após as partes difíceis já terem sido feitas?',
     '2. Com que frequência você tem dificuldade para colocar as coisas em ordem quando está organizando uma tarefa ou atividade?',
     '3. Com que frequência você tem dificuldade para se lembrar de compromissos ou obrigações?',
     '4. Quando você tem uma tarefa que exige muito esforço mental, com que frequência você evita ou adia o início?',
     '5. Com que frequência você fica mexendo as mãos ou os pés quando tem que permanecer sentado por muito tempo?',
     '6. Com que frequência você se sente ativo demais, como se estivesse movido por um motor?',
+    // PARTE B (Aprofundamento - Itens 7 a 18)
+    '7. Com que frequência você comete erros por descuido quando tem que trabalhar num projeto chato ou difícil?',
+    '8. Com que frequência você tem dificuldade para manter a atenção quando está fazendo um trabalho chato ou repetitivo?',
+    '9. Com que frequência você tem dificuldade para se concentrar no que as pessoas dizem, mesmo quando estão falando diretamente com você?',
+    '10. Com que frequência você perde as coisas ou tem dificuldade de encontrar objetos em casa ou no trabalho?',
+    '11. Com que frequência você se distrai com barulhos ou atividades ao seu redor?',
+    '12. Com que frequência você sai do seu lugar em reuniões ou em outras situações nas quais se espera que fique sentado?',
+    '13. Com que frequência você se sente inquieto ou agitado?',
+    '14. Com que frequência você tem dificuldade para sossegar e relaxar quando tem tempo livre para você?',
+    '15. Com que frequência você se pega falando demais em situações sociais?',
+    '16. Quando alguém está falando com você, com que frequência você se pega terminando as frases da pessoa antes dela concluir?',
+    '17. Com que frequência você tem dificuldade para esperar a sua vez em situações em que isso é necessário?',
+    '18. Com que frequência você interrompe os outros quando eles estão ocupados?',
   ];
 
   // Critérios de Rastreio da Escala ATA (Traços Autísticos)
