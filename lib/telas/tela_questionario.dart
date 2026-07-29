@@ -130,7 +130,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     }
   }
 
-    void _exibirResultadoFinal() {
+  void _exibirResultadoFinal() {
     String recomendacao = '';
     bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
     bool ehCars = widget.nomeDoTeste.contains('CARS');
@@ -139,6 +139,9 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     bool ehAbc = widget.nomeDoTeste.contains('ABC');
     bool ehAtencao = widget.nomeDoTeste.contains('Atenção');
     bool ehMemoria = widget.nomeDoTeste.contains('Memória');
+    bool ehSnap = widget.nomeDoTeste.contains('SNAP');
+    bool ehConners = widget.nomeDoTeste.contains('Conners');
+    bool ehVanderbilt = widget.nomeDoTeste.contains('Vanderbilt');
 
     if (ehMchat) {
       if (_pontuacaoTotal <= 2) {
@@ -189,6 +192,24 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         recomendacao = 'SINAL DE ALERTA PARA SOBRECARGA DE MEMÓRIA DE TRABALHO.\nPontuação elevada sugerindo dificuldades na retenção e manipulação de informações imediatas. Indicado criar estratégias de rotina com comandos curtos e visuais.';
       } else {
         recomendacao = 'MEMÓRIA DE CURTO PRAZO DENTRO DA NORMALIDADE.\nCapacidade adaptativa de armazenamento imediato de dados operacionais estável.';
+      }
+    } else if (ehSnap) {
+      if (_pontuacaoTotal >= 23) {
+        recomendacao = 'SINAL DE ALERTA SINALIZADO PELO SNAP-IV.\nA pontuação acumulada indica presença significativa de sintomas clínicos associados à desatenção, hiperatividade ou oposição. Recomendável encaminhamento para triagem médica ou neuropsicológica.';
+      } else {
+        recomendacao = 'RESULTADO DENTRO DA PARIDADE POPULACIONAL NO SNAP-IV.\nFrequência de comportamentos abaixo do ponto de corte epidemiológico estrutural para TDAH/TOD.';
+      }
+    } else if (ehConners) {
+      if (_pontuacaoTotal >= 20) {
+        recomendacao = 'SINAL DE ALERTA ATIVO (CONNERS-3).\nIndicadores elevados de comportamentos de oposição, impulsividade ou dificuldades de conduta. Sugere-se alinhamento de conduta escolar e suporte especializado.';
+      } else {
+        recomendacao = 'ESCALA CONNERS-3 DENTRO DA NORMALIDADE.\nComportamentos sociais de foco e obediência dentro das métricas normativas da escala.';
+      }
+    } else if (ehVanderbilt) {
+      if (_pontuacaoTotal >= 22) {
+        recomendacao = 'SINAL DE ALERTA PARA COMPORTAMENTO ESCOLAR (VANDERBILT).\nPontuação indica dificuldades moderadas a severas de regulação atencional e executiva em sala de aula. Recomendável intervenção psicopedagógica.';
+      } else {
+        recomendacao = 'ESCALA VANDERBILT DENTRO DOS PADRÕES TÍPICOS.\nDesempenho comportamental acadêmico estável e de acordo com o esperado para a faixa etária.';
       }
     } else {
       recomendacao = 'Triagem concluída. Avalie a pontuação de acordo com os critérios específicos do manual desta escala.';
