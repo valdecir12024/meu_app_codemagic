@@ -11,7 +11,6 @@ class ServicoPdf {
   }) async {
     final pdf = pw.Document();
 
-    // Desenha a estrutura visual do documento PDF
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -19,7 +18,7 @@ class ServicoPdf {
           return pw.Padding(
             padding: const pw.EdgeInsets.all(32),
             child: pw.Column(
-              cross pw.CrossAxisAlignment.start,
+              crossAxisAlignment: pw.CrossAxisAlignment.start, // CORREÇÃO: parâmetro e pontuação ajustados
               children: [
                 // Cabeçalho Timbrado do Aplicativo
                 pw.Center(
@@ -67,7 +66,6 @@ class ServicoPdf {
       ),
     );
 
-    // Dispara a janelinha nativa do Android/iOS para Imprimir ou Compartilhar o PDF gerado
     await Printing.sharePdf(bytes: await pdf.save(), filename: 'laudo_${iniciaisPaciente.replaceAll('.', '')}.pdf');
   }
 }
