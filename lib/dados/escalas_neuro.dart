@@ -1,4 +1,5 @@
 class EscalasNeuro {
+  // 20 Perguntas Oficiais do M-CHAT-R/F
   static final List<String> perguntasMchat = [
     '1. Se você apontar para algo na sala, a criança olha para o que você está apontando?',
     '2. Você já se perguntou se seu(sua) filho(a) pode ser surdo(a)?',
@@ -22,7 +23,7 @@ class EscalasNeuro {
     '20. A criança gosta de atividades de movimento (ex: ser balançada ou pulada no seu joelho)?',
   ];
 
-  // Os 15 Critérios Clínicos Oficiais da Escala CARS
+  // 15 Critérios Clínicos Oficiais da Escala CARS
   static final List<String> perguntasCars = [
     'I. Relações Pessoais: Resposta ou isolamento em relação ao contato humano.',
     'II. Imitação: Capacidade de imitar sons, palavras ou movimentos corporais.',
@@ -41,23 +42,41 @@ class EscalasNeuro {
     'XV. Impressão Geral: Avaliação subjetiva do clínico com base nos sintomas observados.',
   ];
 
+  // 6 Perguntas de Rastreio Rápido Crítico da ASRS-18 (Parte A)
+  static final List<String> perguntasAsrs = [
+    '1. Com que frequência você tem dificuldade para finalizar os detalhes finais de um projeto, após as partes difíceis já terem sido feitas?',
+    '2. Com que frequência você tem dificuldade para colocar as coisas em ordem quando está organizando uma tarefa ou atividade?',
+    '3. Com que frequência você tem dificuldade para se lembrar de compromissos ou obrigações?',
+    '4. Quando você tem uma tarefa que exige muito esforço mental, com que frequência você evita ou adia o início?',
+    '5. Com que frequência você fica mexendo as mãos ou os pés quando tem que permanecer sentado por muito tempo?',
+    '6. Com que frequência você se sente ativo demais, como se estivesse movido por um motor?',
+  ];
+
+  // Critérios de Rastreio da Escala ATA (Traços Autísticos)
+  static final List<String> perguntasAta = [
+    '1. Apresenta isolamento ou dificuldade extrema em interagir com outras crianças de sua idade?',
+    '2. Age como se não escutasse o que lhe é dito, ignorando chamados pelo nome?',
+    '3. Demonstra resistência severa e crises de birra diante de mudanças de rotina ou ambiente?',
+    '4. Apego excessivo, rígido ou incomum a objetos específicos ou partes deles?',
+    '5. Apresenta risos ou sorrisos inapropriados sem motivo contextual aparente?',
+    '6. Demonstra ausência de medo diante de perigos reais ou medos desproporcionais a objetos inofensivos?',
+  ];
+
+  // Sinais de Alerta Selecionados da Escala ABC (Behavior Checklist)
+  static final List<String> perguntasAbc = [
+    '1. Evita ativamente o contato visual direto com o avaliador ou familiares?',
+    '2. Gira objetos de forma repetitiva ou foca obsessivamente em partes específicas de brinquedos?',
+    '3. Apresenta flutuações severas de humor e crises de choro ou riso sem motivo aparente?',
+    '4. Não reage a estímulos dolorosos intensos ou demonstra hipersensibilidade ao toque leve?',
+    '5. Repete palavras ou frases curtas ditas por outros (ecolalia) de forma contínua?',
+    '6. Apresenta maneirismos motores repetitivos como bater as mãos (flapping) ou balançar o corpo?',
+  ];
+
   static final Map<String, List<String>> perguntas = {
     'M-CHAT-R/F (TEA Inicial)': perguntasMchat,
-    'Escala CARS (Autismo Infantil)': perguntasCars, // Injeta a lista com os 15 itens oficiais
-    'Escala ASRS-18 (Rastreio TDAH)': [
-      'Com que frequência você tem dificuldade para finalizar os detalhes finais de um projeto?',
-      'Com que frequência você tem dificuldade para colocar as coisas em ordem em uma tarefa?',
-      'Com que frequência você evita ou adia tarefas que exigem muito espaço mental?',
-    ],
-    'Escala ATA (Traços Autísticos)': [
-      'Apresenta dificuldade em interagir com outras crianças de sua idade?',
-      'Age como se não escutasse o que lhe é dito, ignorando chamados?',
-      'Demonstra resistência severa a mudanças de rotina ou ambiente?',
-    ],
-    'Escala ABC (Behavior Checklist)': [
-      'Apresenta reações extremas de isolamento social e recusa de contato?',
-      'Gira objetos de forma repetitiva ou foca em partes específicas de brinquedos?',
-      'Apresenta flutuações severas de humor sem motivo aparente?',
-    ],
+    'Escala CARS (Autismo Infantil)': perguntasCars,
+    'Escala ASRS-18 (Rastreio TDAH)': perguntasAsrs,
+    'Escala ATA (Traços Autísticos)': perguntasAta,
+    'Escala ABC (Behavior Checklist)': perguntasAbc,
   };
 }
