@@ -11,8 +11,8 @@ class TelaQuestionario extends StatefulWidget {
 
 class _TelaQuestionarioState extends State<TelaQuestionario> {
   int _indicePerguntaAtual = 0;
-  int _pontuacaoTotal = 0;
-  final TextEditingController _iniciaisController = TextEditingController(); // Controlador LGPD
+  double _pontuacaoTotal = 0.0; // Mudado para double porque a CARS aceita frações
+  final TextEditingController _iniciaisController = TextEditingController();
   bool _testeIniciado = false;
 
   @override
@@ -22,8 +22,8 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
 
     double progresso = (_indicePerguntaAtual + 1) / listaPerguntas.length;
     bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
+    bool ehCars = widget.nomeDoTeste.contains('CARS');
 
-    // TELA INICIAL: Coleta de iniciais antes de começar o teste (Adequação LGPD)
     if (!_testeIniciado) {
       return Scaffold(
         appBar: AppBar(title: Text(widget.nomeDoTeste), backgroundColor: Colors.deepPurple, foregroundColor: Colors.white),
@@ -62,7 +62,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       );
     }
 
-    // TELA DE QUESTIONÁRIO ATIVA
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
       appBar: AppBar(title: Text('${_iniciaisController.text} - Triagem'), backgroundColor: Colors.deepPurple, foregroundColor: Colors.white),
@@ -83,15 +82,22 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
             ),
             const SizedBox(height: 24),
             
+            // RENDEREZIZAÇÃO CONDICIONAL BASEADA NA ESCALA SELECIONADA
             if (ehMchat) ...[
               _construirOpcaoResposta('Sim', () => _processarRespostaMchat(true, listaPerguntas)),
               _construirOpcaoResposta('Não', () => _processarRespostaMchat(false, listaPerguntas)),
+            ] else if (ehCars) ...[
+              // Botões customizados com pontuações clínicas de 1 a 4 da CARS
+              _construirOpcaoResposta('Nota 1: Dentro dos limites da normalidade', () => _processarRespostaPadrao(1.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Nota 2: Autismo levemente anormal / Leve', () => _processarRespostaPadrao(2.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Nota 3: Autismo moderadamente anormal / Moderado', () => _processarRespostaPadrao(3.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Nota 4: Autismo gravemente anormal / Grave', () => _processarRespostaPadrao(4.0, totalPerguntas: listaPerguntas)),
             ] else ...[
-              _construirOpcaoResposta('Nunca', () => _processarRespostaPadrao(0, totalPerguntas: listaPerguntas)),
-              _construirOpcaoResposta('Raramente', () => _processarRespostaPadrao(1, totalPerguntas: listaPerguntas)),
-              _construirOpcaoResposta('Às vezes', () => _processarRespostaPadrao(2, totalPerguntas: listaPerguntas)),
-              _construirOpcaoResposta('Frequentemente', () => _processarRespostaPadrao(3, totalPerguntas: listaPerguntas)),
-              _construirOpcaoResposta('Sempre', () => _processarRespostaPadrao(4, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Nunca', () => _processarRespostaPadrao(0.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Raramente', () => _processarRespostaPadrao(1.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Às vezes', () => _processarRespostaPadrao(2.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Frequentemente', () => _processarRespostaPadrao(3.0, totalPerguntas: listaPerguntas)),
+              _construirOpcaoResposta('Sempre', () => _processarRespostaPadrao(4.0, totalPerguntas: listaPerguntas)),
             ],
           ],
         ),
@@ -99,20 +105,19 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     );
   }
 
-  // Lógica Científica Inversa do M-CHAT-R/F
   void _processarRespostaMchat(bool respondeuSim, List<String> totalPerguntas) {
     int numeroPergunta = _indicePerguntaAtual + 1;
     bool pontuaNoSim = (numeroPergunta == 2 || numeroPergunta == 5 || numeroPergunta == 12);
-    int pontos = 0;
+    double pontos = 0.0;
 
-    if (pontuaNoSim && respondeuSim) pontos = 1;
-    if (!pontuaNoSim && !respondeuSim) pontos = 1;
+    if (pontuaNoSim && respondeuSim) pontos = 1.0;
+    if (!pontuaNoSim && !respondeuSim) pontos = 1.0;
 
     _pontuacaoTotal += pontos;
     _avancarOuFinalizar(totalPerguntas);
   }
 
-  void _processarRespostaPadrao(int pontos, {required List<String> totalPerguntas}) {
+  void _processarRespostaPadrao(double pontos, {required List<String> totalPerguntas}) {
     _pontuacaoTotal += pontos;
     _avancarOuFinalizar(totalPerguntas);
   }
@@ -125,21 +130,30 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     }
   }
 
-  // Gera o Alerta Final com Recomendações Automáticas de Acordo com a Pontuação
   void _exibirResultadoFinal() {
     String recomendacao = '';
     bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
+    bool ehCars = widget.nomeDoTeste.contains('CARS');
 
     if (ehMchat) {
       if (_pontuacaoTotal <= 2) {
-        recomendacao = 'RISCO BAIXO.\nNenhuma ação clínica imediata é necessária, continue o acompanhamento do desenvolvimento.';
+        recomendacao = 'RISCO BAIXO.\nContinue acompanhando o desenvolvimento.';
       } else if (_pontuacaoTotal <= 7) {
-        recomendacao = 'RISCO MÉDIO.\nRecomenda-se aplicar a Entrevista de Seguimento do M-CHAT-R/F ou realizar uma avaliação detalhada.';
+        recomendacao = 'RISCO MÉDIO.\nRecomenda-se aplicar a entrevista de seguimento ou avaliação detalhada.';
       } else {
-        recomendacao = 'RISCO ALTO.\nRecomenda-se encaminhamento imediato para avaliação diagnóstica especializada com neuropediatra/psicólogo.';
+        recomendacao = 'RISCO ALTO.\nEncaminhamento imediato para avaliação diagnóstica especializada.';
+      }
+    } else if (ehCars) {
+      // Regras de corte oficiais da pontuação total da CARS
+      if (_pontuacaoTotal < 30) {
+        recomendacao = 'PONTUAÇÃO ABAIXO DO PONTO DE CORTE.\nDesenvolvimento dentro dos limites de normalidade estrutural para autismo.';
+      } else if (_pontuacaoTotal <= 36.5) {
+        recomendacao = 'GRAU DE AUTISMO: LEVE A MODERADO.\nIndica presença de sintomas compatíveis com TEA de nível leve ou moderado. Sugere-se planejamento de intervenção e acompanhamento interdisciplinar.';
+      } else {
+        recomendacao = 'GRAU DE AUTISMO: GRAVE.\nSintomas severos e altamente impactantes no funcionamento diário. Recomendável plano intensivo de terapia comportamental e acompanhamento médico especializado.';
       }
     } else {
-      recomendacao = 'Triagem inicial concluída. Avalie a pontuação obtida de acordo com os critérios específicos do manual desta escala.';
+      recomendacao = 'Triagem concluída. Avalie a pontuação de acordo com os critérios específicos do manual desta escala.';
     }
 
     showDialog(

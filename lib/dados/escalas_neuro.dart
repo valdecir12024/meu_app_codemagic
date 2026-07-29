@@ -1,5 +1,4 @@
 class EscalasNeuro {
-  // 20 Perguntas Oficiais do M-CHAT-R/F
   static final List<String> perguntasMchat = [
     '1. Se você apontar para algo na sala, a criança olha para o que você está apontando?',
     '2. Você já se perguntou se seu(sua) filho(a) pode ser surdo(a)?',
@@ -23,17 +22,32 @@ class EscalasNeuro {
     '20. A criança gosta de atividades de movimento (ex: ser balançada ou pulada no seu joelho)?',
   ];
 
+  // Os 15 Critérios Clínicos Oficiais da Escala CARS
+  static final List<String> perguntasCars = [
+    'I. Relações Pessoais: Resposta ou isolamento em relação ao contato humano.',
+    'II. Imitação: Capacidade de imitar sons, palavras ou movimentos corporais.',
+    'III. Resposta Emocional: Grau de adequação da resposta emocional às situações.',
+    'IV. Uso do Corpo: Coordenação motora, agilidade e presença de maneirismos (ex: andar na ponta dos pés).',
+    'V. Uso de Objetos: Interesse por brinquedos e capacidade de dar utilidade funcional a eles.',
+    'VI. Resposta a Mudanças: Resistência ou dificuldade de adaptação a mudanças de rotina.',
+    'VII. Resposta Visual: Uso do olhar, contato visual ou fixação em estímulos visuais específicos.',
+    'VIII. Resposta Auditiva: Sensibilidade a ruídos, barulhos ou desatenção a chamados sonoros.',
+    'IX. Resposta do Paladar, Olfato e Tato: Reação ou interesse incomum por cheiros, texturas ou sabores.',
+    'X. Medo ou Nervosismo: Medo desproporcional ou ausência de medo diante de perigos reais.',
+    'XI. Comunicação Verbal: Presença de ecolalia, alterações de tom ou atraso severo na fala.',
+    'XII. Comunicação Não-Verbal: Uso de gestos, postura ou expressões para se comunicar.',
+    'XIII. Nível de Atividade: Presença de hiperatividade motora ou letargia extrema.',
+    'XIV. Nível e Consistência do Funcionamento Intelectual: Desempenho cognitivo geral e habilidades isoladas.',
+    'XV. Impressão Geral: Avaliação subjetiva do clínico com base nos sintomas observados.',
+  ];
+
   static final Map<String, List<String>> perguntas = {
     'M-CHAT-R/F (TEA Inicial)': perguntasMchat,
-    'Escala CARS (Autismo Infantil)': [
-      'Item 1: Relações Pessoais (Grau de isolamento ou resposta ao contato)',
-      'Item 2: Imitação (Capacidade de imitar sons, palavras ou movimentos)',
-      'Item 3: Resposta Emocional (Apropriação da reação à situação)',
-    ],
+    'Escala CARS (Autismo Infantil)': perguntasCars, // Injeta a lista com os 15 itens oficiais
     'Escala ASRS-18 (Rastreio TDAH)': [
       'Com que frequência você tem dificuldade para finalizar os detalhes finais de um projeto?',
       'Com que frequência você tem dificuldade para colocar as coisas em ordem em uma tarefa?',
-      'Com que frequência você evita ou adia tarefas que exigem muito esforço mental?',
+      'Com que frequência você evita ou adia tarefas que exigem muito espaço mental?',
     ],
     'Escala ATA (Traços Autísticos)': [
       'Apresenta dificuldade em interagir com outras crianças de sua idade?',
