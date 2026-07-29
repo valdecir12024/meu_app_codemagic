@@ -1,18 +1,32 @@
 class EscalasSocioemocional {
-  // 10 Itens Oficiais de Rastreio do Questionário SDQ
+  // 25 Itens Oficiais de Rastreio do Questionário SDQ
   static final List<String> perguntasSdq = [
-    '1. Costuma se queixar de dores de cabeça, de estômago ou enjôos com frequência?',
-    '2. Tem muitas preocupações ou parece se preocupar com muitas coisas diariamente?',
-    '3. Frequentemente perde o controle emocional, manifestando acessos de raiva?',
-    '4. É uma pessoa que tende a ser solitária ou prefere brincar/ficar sozinha?',
-    '5. É facilmente liderada ou manipulada por outras crianças ou colegas?',
-    '6. Demonstra muitas manifestações de medo e assusta-se com facilidade?',
-    '7. Tende a ser prestativa e compartilha objetos voluntariamente com os pares?',
-    '8. É constantemente pilhada, inquieta ou demonstra sofrimento emocional?',
-    '9. Tem melhor relacionamento com adultos do que com crianças da sua idade?',
-    '10. Demonstra bom foco em tarefas e consegue finalizá-las de forma estável?',
-  ];
-
+    '1. Tenta ser atencioso(a) com os sentimentos dos outros.',
+    '2. É inquieto(a), hiperativo(a), não consegue ficar parado(a) muito tempo.',
+    '3. Queixa-se frequentemente de dores de cabeça, de estômago ou de enjoos.',
+    '4. Divide de boa vontade as coisas com outras crianças (brinquedos, lápis, etc.).',
+    '5. Tem muitas explosões de raiva ou perde facilmente o controle.',
+    '6. É uma criança solitária, prefere brincar sozinho(a).',
+    '7. Geralmente é obediente, faz o que os adultos lhe pedem.',
+    '8. Tem muitas preocupações ou parece se preocupar com tudo.',
+    '9. É prestativo(a) se alguém está magoado, chateado ou doente.',
+    '10. Fica continuamente se mexendo na cadeira ou remexendo as mãos.',
+    '11. Tem pelo menos um(a) bom(a) amigo(a).',
+    '12. Briga frequentemente com outras crianças ou intimida os colegas.',
+    '13. Frequentemente parece triste, desanimado(a) ou choroso(a).',
+    '14. Geralmente é querido(a) por outras crianças.',
+    '15. Distrai-se facilmente, tem dificuldade para se concentrar.',
+    '16. Fica nervoso(a) ou dependente em situações novas; perde facilmente a confiança.',
+    '17. É gentil com crianças mais novas.',
+    '18. Frequentemente acusa os outros de mentir ou trapacear.',
+    '19. Sofre perseguição ou intimidação por parte de outras crianças (bullying).',
+    '20. Frequentemente oferece-se para ajudar os outros (pais, professores, crianças).',
+    '21. Pensa antes de agir.',
+    '22. Pega coisas que não são suas (em casa, na escola ou em outros lugares).',
+    '23. Dá-se melhor com adultos do que com outras crianças.',
+    '24. Tem muitos medos, assusta-se facilmente.',
+    '25. Completa as tarefas que começa; tem boa capacidade de atenção.'
+    ],
   // 10 Perguntas Oficiais de Triagem Curta da Escala SCARED (Ansiedade)
   static final List<String> perguntasScared = [
     '1. Sente um medo ou desconforto inexplicável quando precisa falar ou se expor em público?',
