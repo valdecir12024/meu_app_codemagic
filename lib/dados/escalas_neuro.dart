@@ -95,12 +95,14 @@ class EscalasNeuro {
 
   // Sinais de Alerta Selecionados da Escala ABC (Behavior Checklist)
   static final List<String> perguntasAbc = [
-    '1. Evita ativamente o contato visual direto com o avaliador ou familiares?',
-    '2. Gira objetos de forma repetitiva ou foca obsessivamente em partes específicas de brinquedos?',
-    '3. Apresenta flutuações severas de humor e crises de choro ou riso sem motivo aparente?',
-    '4. Não reage a estímulos dolorosos intensos ou demonstra hipersensibilidade ao toque leve?',
-    '5. Repete palavras ou frases curtas ditas por outros (ecolalia) de forma contínua?',
-    '6. Apresenta maneirismos motores repetitivos como bater as mãos (flapping) ou balançar o corpo?',
+    'Escala ABC (Behavior Checklist)': [
+      '1. Gira em torno de si por longo período de tempo.',
+      '2. Aprende uma tarefa, mas esquece rapidamente.',
+      '3. É raro atender a estímulos não-verbais sociais/ambientais.',
+      '4. Ausência de resposta para solicitações verbais (parece surdo).',
+      '5. Sobressalta-se ou demonstra terror com ruídos cotidianos inofensivos.',
+      '6. Flutuações severas de humor sem motivo aparente ou contextual.',
+    ],
   ];
 
   static final Map<String, List<String>> perguntas = {

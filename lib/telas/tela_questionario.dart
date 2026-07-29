@@ -169,6 +169,18 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     } else {
       recomendacao = 'Triagem concluída. Avalie a pontuação de acordo com os critérios específicos do manual desta escala.';
     }
+        } else if (widget.nomeDoTeste.contains('ABC')) {
+      // Regras de corte oficiais da ABC/ICA
+      if (_pontuacaoTotal < 47) {
+        recomendacao = 'BAIXA PROBABILIDADE DE AUTISMO.\nSintomas abaixo do ponto de corte epidemiológico.';
+      } else if (_pontuacaoTotal <= 53) {
+        recomendacao = 'RESULTADO LIMÍTROFE / DUVIDOSO.\nPontuação na zona cinzenta de diagnóstico. Recomenda-se acompanhamento longitudinal e reavaliação em 6 meses.';
+      } else if (_pontuacaoTotal <= 67) {
+        recomendacao = 'PROBABILIDADE MODERADA DE TEA.\nIndícios comportamentais moderados compatíveis com o espectro. Encaminhar para avaliação clínica interdisciplinar.';
+      } else {
+        recomendacao = 'ALTA PROBABILIDADE DE AUTISMO.\nSintomas severos e altamente indicativos de TEA. Necessário encaminhamento imediato para neuropediatra/psiquiatra infantil.';
+      }
+    }
 
     showDialog(
       context: context,
