@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../dados/banco_perguntas.dart';
+import '../servicos/servico_pdf.dart';
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
@@ -243,7 +244,23 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         return AlertDialog(
           title: Text('Resultado: ${_iniciaisController.text}', style: const TextStyle(fontWeight: FontWeight.bold)),
           content: Text('Pontuação total: $_pontuacaoTotal pontos.\n\nDiretriz Clínica:\n$recomendacao', style: const TextStyle(fontSize: 16)),
-          actions: [
+                    actions: [
+            // NOVO BOTÃO: Gerar Relatório em PDF
+            TextButton.icon(
+              icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
+              label: const Text('Gerar Laudo PDF', style: TextStyle(color: Colors.red, fontSize: 16)),
+              onPressed: () {
+                // Chama o motor do PDF injetando os dados reais da triagem atual
+                ServicoPdf.gerarECompartilharLaudo(
+                  iniciaisPaciente: _iniciaisController.text,
+                  nomeDoTeste: widget.nomeDoTeste,
+                  pontuacao: _pontuacaoTotal,
+                  recomendacao: recomendacao,
+                );
+              },
+            ),
+            
+            // Botão tradicional de fechar
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
