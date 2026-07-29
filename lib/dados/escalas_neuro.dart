@@ -35,23 +35,21 @@ class EscalasNeuro {
     'VIII. Resposta Auditiva: Sensibilidade a ruídos, barulhos ou desatenção a chamados sonoros.',
     'IX. Resposta do Paladar, Olfato e Tato: Reação ou interesse incomum por cheiros, texturas ou sabores.',
     'X. Medo ou Nervosismo: Medo desproporcional ou ausência de medo diante de perigos reais.',
-    'XI. Comunicação Verbal: Presença de ecolalia, alterações de tom ou atraso severo na fala.',
+    'XI. Comunicação Verbal: Presence de ecolalia, alterações de tom ou atraso severo na fala.',
     'XII. Comunicação Não-Verbal: Uso de gestos, postura ou expressões para se comunicar.',
     'XIII. Nível de Atividade: Presença de hiperatividade motora ou letargia extrema.',
     'XIV. Nível e Consistência do Funcionamento Intelectual: Desempenho cognitivo geral e habilidades isoladas.',
     'XV. Impressão Geral: Avaliação subjetiva do clínico com base nos sintomas observados.',
   ];
 
-    // 18 Perguntas Oficiais Completas da Escala ASRS-18
+  // 18 Perguntas Oficiais Completas da Escala ASRS-18
   static final List<String> perguntasAsrs = [
-    // PARTE A (Rastreio Rápido - Itens 1 a 6)
     '1. Com que frequência você tem dificuldade para finalizar os detalhes finais de um projeto, após as partes difíceis já terem sido feitas?',
     '2. Com que frequência você tem dificuldade para colocar as coisas em ordem quando está organizando uma tarefa ou atividade?',
     '3. Com que frequência você tem dificuldade para se lembrar de compromissos ou obrigações?',
     '4. Quando você tem uma tarefa que exige muito esforço mental, com que frequência você evita ou adia o início?',
     '5. Com que frequência você fica mexendo as mãos ou os pés quando tem que permanecer sentado por muito tempo?',
     '6. Com que frequência você se sente ativo demais, como se estivesse movido por um motor?',
-    // PARTE B (Aprofundamento - Itens 7 a 18)
     '7. Com que frequência você comete erros por descuido quando tem que trabalhar num projeto chato ou difícil?',
     '8. Com que frequência você tem dificuldade para manter a atenção quando está fazendo um trabalho chato ou repetitivo?',
     '9. Com que frequência você tem dificuldade para se concentrar no que as pessoas dizem, mesmo quando estão falando diretamente com você?',
@@ -66,7 +64,7 @@ class EscalasNeuro {
     '18. Com que frequência você interrompe os outros quando eles estão ocupados?',
   ];
 
-    // 23 Itens Oficiais Completos da Escala ATA (Traços Autísticos)
+  // 23 Itens Oficiais Completos da Escala ATA (Traços Autísticos)
   static final List<String> perguntasAta = [
     '1. Dificuldade em interagir com outras crianças de sua idade.',
     '2. Apresenta isolamento social e prefere manter-se isolado(a).',
@@ -93,23 +91,10 @@ class EscalasNeuro {
     '23. Apresenta fascinação visual por objetos que giram (ex: ventilador, rodas de carrinhos).',
   ];
 
-  // Sinais de Alerta Selecionados da Escala ABC (Behavior Checklist)
-  static final List<String> perguntasAbc = [
-    'Escala ABC (Behavior Checklist)': [
-      '1. Gira em torno de si por longo período de tempo.',
-      '2. Aprende uma tarefa, mas esquece rapidamente.',
-      '3. É raro atender a estímulos não-verbais sociais/ambientais.',
-      '4. Ausência de resposta para solicitações verbais (parece surdo).',
-      '5. Sobressalta-se ou demonstra terror com ruídos cotidianos inofensivos.',
-      '6. Flutuações severas de humor sem motivo aparente ou contextual.',
-    ],
-  ];
-
   static final Map<String, List<String>> perguntas = {
     'M-CHAT-R/F (TEA Inicial)': perguntasMchat,
     'Escala CARS (Autismo Infantil)': perguntasCars,
     'Escala ASRS-18 (Rastreio TDAH)': perguntasAsrs,
     'Escala ATA (Traços Autísticos)': perguntasAta,
-    'Escala ABC (Behavior Checklist)': perguntasAbc,
   };
 }
