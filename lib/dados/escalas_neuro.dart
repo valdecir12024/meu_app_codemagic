@@ -66,14 +66,31 @@ class EscalasNeuro {
     '18. Com que frequência você interrompe os outros quando eles estão ocupados?',
   ];
 
-  // Critérios de Rastreio da Escala ATA (Traços Autísticos)
+    // 23 Itens Oficiais Completos da Escala ATA (Traços Autísticos)
   static final List<String> perguntasAta = [
-    '1. Apresenta isolamento ou dificuldade extrema em interagir com outras crianças de sua idade?',
-    '2. Age como se não escutasse o que lhe é dito, ignorando chamados pelo nome?',
-    '3. Demonstra resistência severa e crises de birra diante de mudanças de rotina ou ambiente?',
-    '4. Apego excessivo, rígido ou incomum a objetos específicos ou partes deles?',
-    '5. Apresenta risos ou sorrisos inapropriados sem motivo contextual aparente?',
-    '6. Demonstra ausência de medo diante de perigos reais ou medos desproporcionais a objetos inofensivos?',
+    '1. Dificuldade em interagir com outras crianças de sua idade.',
+    '2. Apresenta isolamento social e prefere manter-se isolado(a).',
+    '3. Age como se não escutasse o que lhe é dito, ignorando chamados pelo nome.',
+    '4. Resistência severa e crises de birra diante de mudanças de rotina ou ambiente.',
+    '5. Fixação ou apego excessivo, rígido ou incomum a objetos específicos.',
+    '6. Dificuldade em aprender e usar a linguagem de forma funcional.',
+    '7. Apresenta risos, sorrisos ou gargalhadas inapropriadas sem motivo contextual.',
+    '8. Ausência de medo diante de perigos reais ou medos desproporcionais a objetos inofensivos.',
+    '9. Apresenta maneirismos motores repetitivos (ex: flapping de mãos, balançar o corpo).',
+    '10. Não olha nos olhos quando falam com ele(a) (evitação do contato visual).',
+    '11. Apresenta ecolalia (repetição imediata ou tardia de frases e palavras de terceiros).',
+    '12. Gira objetos de forma repetitiva ou foca obsessivamente em partes de brinquedos.',
+    '13. Demonstra hipersensibilidade ou hiposensibilidade a sons (tapa os ouvidos ou ignora barulhos).',
+    '14. Apego excessivo a uma rotina diária rígida (se quebra a rotina, entra em crise).',
+    '15. Não responde a manifestações de afeto ou carinho dos pais ou cuidadores.',
+    '16. Anda na ponta dos pés com frequência considerável.',
+    '17. Tem apego a objetos bizarros ou incomuns (ex: pedaço de barbante, tampa de garrafa).',
+    '18. Apresenta hiperatividade motora desorganizada ou letargia extrema.',
+    '19. Demonstra reações extremas a texturas, cheiros ou sabores de alimentos.',
+    '20. Apresenta dificuldades acentuadas no sono ou na regulação do humor.',
+    '21. Usa os objetos e brinquedos de forma não funcional (ex: apenas enfileira ou bate).',
+    '22. Apresenta autoagressividade ou morde-se/bate a cabeça quando frustrado(a).',
+    '23. Apresenta fascinação visual por objetos que giram (ex: ventilador, rodas de carrinhos).',
   ];
 
   // Sinais de Alerta Selecionados da Escala ABC (Behavior Checklist)
