@@ -3,11 +3,21 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../dados/banco_perguntas.dart';
-import '../dados/gerador_pdf.dart'; // Importa nosso gerador de PDF
+import '../dados/gerador_pdf.dart';
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
-  const TelaQuestionario({super.key, required this.nomeDoTeste});
+  final String nomePaciente;
+  final String idadePaciente;
+  final String instituicao;
+
+  const TelaQuestionario({
+    super.key, 
+    required this.nomeDoTeste,
+    required this.nomePaciente,
+    required this.idadePaciente,
+    required this.instituicao,
+  });
 
   @override
   State<TelaQuestionario> createState() => _TelaQuestionarioState();
@@ -36,7 +46,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          cross WITHOUT bounds: CrossAxisAlignment.start,
           children: [
             LinearProgressIndicator(
               value: progresso,
@@ -98,9 +108,13 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
   void _processarRespostaMchat(String resposta, List<String> totalPerguntas) {
     int numeroPergunta = _indicePerguntaAtual + 1;
     if (numeroPergunta == 2 || numeroPergunta == 5 || numeroPergunta == 12) {
-      if (resposta == 'Sim') _pontuacaoTotal += 1;
+      if (resposta == 'Sim') {
+        _pontuacaoTotal += 1;
+      }
     } else {
-      if (resposta == 'Não') _pontuacaoTotal += 1;
+      if (resposta == 'Não') {
+        _pontuacaoTotal += 1;
+      }
     }
     _proximaEtapa(totalPerguntas);
   }
@@ -115,29 +129,44 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     }
   }
 
-  // Função que gera o arquivo PDF temporário e abre o compartilhamento do celular
   Future<void> _exportarECompartilharPdf(String classificacao) async {
-    final docPdf = GeradorPdf.criarDocumento(widget.nomeDoTeste, _pontuacaoTotal, classificacao);
+    final docPdf = GeradorPdf.criarDocumento(
+      widget.nomeDoTeste, 
+      _pontuacaoTotal, 
+      classificacao,
+      nome: widget.nomePaciente,
+      idade: widget.idadePaciente,
+      instituicao: widget.instituicao,
+    );
     final bytes = await docPdf.save();
     
     final diretorioTemporario = await getTemporaryDirectory();
-    final caminhoArquivo = '${diretorioTemporario.path}/Relatorio_Triagem.pdf';
+    final caminhoArquivo = '${diretorioTemporario.path}/Relatorio_${widget.nomePaciente.replaceAll(' ', '_')}.pdf';
     final arquivo = File(caminhoArquivo);
     await arquivo.writeAsBytes(bytes);
 
+    // Atualizado para o método moderno do share_plus sem avisos descontinuados
     await Share.shareXFiles([XFile(caminhoArquivo)], text: 'Segue o relatório de triagem do NeuroApp.');
   }
 
   void _exibirResultadoFinal() {
     String classificacao = '';
     if (widget.nomeDoTeste.contains('M-CHAT')) {
-      if (_pontuacaoTotal <= 2) classificacao = 'Risco Baixo.';
-      else if (_pontuacaoTotal <= 7) classificacao = 'Risco Moderado.';
-      else classificacao = 'Risco Alto.';
+      if (_pontuacaoTotal <= 2) {
+        classificacao = 'Risco Baixo.';
+      } else if (_pontuacaoTotal <= 7) {
+        classificacao = 'Risco Moderado.';
+      } else {
+        classificacao = 'Risco Alto.';
+      }
     } else if (widget.nomeDoTeste.contains('CARS')) {
-      if (_pontuacaoTotal < 30) classificacao = 'Sem Autismo (Abaixo do ponto de corte).';
-      else if (_pontuacaoTotal < 37) classificacao = 'Autismo Leve a Moderado.';
-      else classificacao = 'Autismo Grave.';
+      if (_pontuacaoTotal < 30) {
+        classificacao = 'Sem Autismo (Abaixo do ponto de corte).';
+      } else if (_pontuacaoTotal < 37) {
+        classificacao = 'Autismo Leve a Moderado.';
+      } else {
+        classificacao = 'Autismo Grave.';
+      }
     }
 
     showDialog(
@@ -147,11 +176,10 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         return AlertDialog(
           title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
           content: Text(
-            'Pontuação total obtida: $_pontuacaoTotal pontos.\n\nClassificação: $classificacao\n\nEste resultado serve como um rastreio inicial clínico ou educacional.',
+            'Avaliado: ${widget.nomePaciente}\nPontuação total: $_pontuacaoTotal pontos.\n\nClassificação: $classificacao\n\nEste resultado serve como um rastreio inicial.',
             style: const TextStyle(fontSize: 16),
           ),
           actions: [
-            // NOVO BOTÃO DE EXPORTAR PDF
             TextButton.icon(
               icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
               label: const Text('Exportar PDF', style: TextStyle(color: Colors.red, fontSize: 16)),
