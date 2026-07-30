@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'tela_principal.dart';
 
-class TelaLogin extends StatelessWidget {
+class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
+
+  @override
+  State<TelaLogin> createState() => _TelaLoginState();
+}
+
+class _TelaLoginState extends State<TelaLogin> {
+  bool _ocultarSenha = true; // Controla o estado de visibilidade da senha
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +21,6 @@ class TelaLogin extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Aplicação 2: Preparado para receber a logo oficial do NeuroApp
-            // Por enquanto exibe o ícone clínico padrão-ouro até você mapear o arquivo de imagem
             const Icon(
               Icons.psychology, 
               size: 90, 
@@ -36,12 +41,24 @@ class TelaLogin extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const TextField(
-              obscureText: true,
+            TextField(
+              obscureText: _ocultarSenha, // Usa a variável dinâmica
               decoration: InputDecoration(
                 labelText: 'Senha de Acesso',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
+                prefixIcon: const Icon(Icons.lock),
+                // Botão de olhinho integrado na direita do campo
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _ocultarSenha ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _ocultarSenha = !_ocultarSenha; // Inverte o estado ao clicar
+                    });
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 24),
