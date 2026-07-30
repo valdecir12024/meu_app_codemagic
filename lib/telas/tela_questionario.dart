@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import '../dados/banco_perguntas.dart';
 import '../dados/analisador_resultados.dart';
-import '../dados/servico_historico.dart';
+import '../dados/servico_historico.dart'; // Mantém o import correto para a pasta dados
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
   final String nomePaciente;
   final String idadePaciente;
-  final String instituicao; // ADICIONADO: Parâmetro para sanar o erro de chamada
+  final String instituicao;
 
   const TelaQuestionario({
     super.key, 
     required this.nomeDoTeste, 
     this.nomePaciente = 'Não Informado',
     this.idadePaciente = 'Não Informada',
-    this.instituicao = 'Não Informada', // Parâmetro opcional com valor padrão
+    this.instituicao = 'Não Informada',
   });
 
   @override
@@ -72,12 +72,12 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
             if (ehMchat) ...[
               _construirOpcao('Sim', () => _processarAcao('Sim', listaPerguntas)),
               _construirOpcao('Não', () => _processarAcao('Não', listaPerguntas)),
-                        ] else if (ehCars) ...[
+            ] else if (ehCars) ...[
               _construirOpcao('Nota 1.0 ou 1.5 - Sintomas Normais/Leves', () => _processarAcao('1.0', listaPerguntas)),
               _construirOpcao('Nota 2.0 ou 2.5 - Sintomas Leves/Moderados', () => _processarAcao('2.0', listaPerguntas)),
-              _construirOpcao('Nota 3.0 or 3.5 - Sintomas Moderados/Graves', () => _processarAcao('3.0', listaPerguntas)),
+              _construirOpcao('Nota 3.0 ou 3.5 - Sintomas Moderados/Graves', () => _processarAcao('3.0', listaPerguntas)),
               _construirOpcao('Nota 4.0 - Sintomas Severos', () => _processarAcao('4.0', listaPerguntas)),
-            ]else ...[
+            ] else ...[
               _construirOpcao('Nunca', () => _processarAcao('Nunca', listaPerguntas)),
               _construirOpcao('Raramente', () => _processarAcao('Raramente', listaPerguntas)),
               _construirOpcao('Às vezes', () => _processarAcao('Às vezes', listaPerguntas)),
@@ -111,30 +111,26 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         _indicePerguntaAtual++;
       });
     } else {
-      // Como o método 'salvarTriagem' deu erro no Codemagic por divergência de nome,
-      // deixamos a chamada comentada para isolar o erro e não travar o seu build.
-      // Nas próximas etapas locais descobriremos o nome exato do seu método interno!
-      
-      /*
+      // 1. Busca a classificação científica baseada no total de pontos obtidos
+      final textoAvaliacao = AnalisadorResultados.obterAvaliacao(widget.nomeDoTeste, _pontuacaoTotal);
+
+      // 2. Chama o seu método real 'salvarRelatorio' convertendo tudo para String
       try {
-        ServicoHistorico.salvarTriagem(
-          nomePaciente: widget.nomePaciente,
-          nomeTeste: widget.nomeDoTeste,
-          pontuacao: _pontuacaoTotal,
-          data: DateTime.now().toString(),
+        ServicoHistorico.salvarRelatorio(
+          nome: widget.nomePaciente,
+          teste: widget.nomeDoTeste,
+          pontuacao: _pontuacaoTotal.toString(),
+          classificacao: textoAvaliacao,
         );
       } catch (e) {
-        debugPrint('Erro de persistência: $e');
+        debugPrint('Aviso de persistência: $e');
       }
-      */
       
-      _exibirResultadoFinal();
+      _exibirResultadoFinal(textoAvaliacao);
     }
   }
 
-  void _exibirResultadoFinal() {
-    final avaliacaoTexto = AnalisadorResultados.obterAvaliacao(widget.nomeDoTeste, _pontuacaoTotal);
-
+  void _exibirResultadoFinal(String avaliacaoTexto) {
     showDialog(
       context: context,
       barrierDismissible: false,
