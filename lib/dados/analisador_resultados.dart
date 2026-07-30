@@ -38,7 +38,7 @@ class AnalisadorResultados {
     return _obterAvaliacaoParte2(nomeDoTeste, pontuacao);
   }
 
-  static String _obterAvaliacaoParte2(String nomeDoTeste, num pontuacao) {
+   static String _obterAvaliacaoParte2(String nomeDoTeste, num pontuacao) {
     // 2. ESCALAS DE COMPORTAMENTO E TDAH
     if (nomeDoTeste.contains('ASRS-18') || nomeDoTeste.contains('SNAP-IV')) {
       if (pontuacao >= 12) return 'Resultado: ACIMA DO PONTO DE CORTE.\n\nIndicativo forte de sintomas clássicos de TDAH. Recomendável investigação clínica.';
@@ -48,6 +48,15 @@ class AnalisadorResultados {
     if (nomeDoTeste.contains('Conners')) {
       if (pontuacao >= 15) return 'Resultado: Alerta Comportamental.\n\nMarcadores de conduta, oposição ou impulsividade elevados. Sugere-se orientação parental.';
       return 'Resultado: Conduta Adequada.\n\nComportamento social e adaptativo dentro da média.';
+    }
+
+    // CORREÇÃO: Adicionada a regra oficial para a Escala Basic 3
+    if (nomeDoTeste.contains('Basic 3')) {
+      if (pontuacao < 10) {
+        return 'Resultado Basic 3: ALERTA NO DESENVOLVIMENTO.\n\nA pontuação total ficou abaixo do esperado para a faixa etária. Recomendada triagem neuropsicológica complementar.';
+      } else {
+        return 'Resultado Basic 3: DESENVOLVIMENTO ADEQUADO.\n\nAs competências básicas avaliadas encontram-se dentro dos marcos de desenvolvimento esperados.';
+      }
     }
 
     // 3. ESCALAS SOCIOEMOCIONAIS E ANSIEDADE
@@ -62,11 +71,14 @@ class AnalisadorResultados {
       return 'Resultado: Nível de Ansiedade Típico.\n\nReações emocionais normais para a faixa etária.';
     }
 
+    // CORREÇÃO: Garantindo o texto descritivo cirúrgico para a escala de Rosemberg
     if (nomeDoTeste.contains('Rosemberg')) {
-      if (pontuacao <= 15) return 'Resultado: Autoestima Baixa.\n\nEscore indica sentimentos de desvalorização pessoal. Recomendável suporte e acolhimento emocional.';
-      return 'Resultado: Autoestima Saudável.\n\nPercepção de autovalorização positiva e equilibrada.';
+      if (pontuacao <= 15) {
+        return 'Resultado Rosemberg: AUTOESTIMA BAIXA.\n\nO escore indica a presença de sentimentos de desvalorização pessoal e insegurança. Recomendável suporte e acolhimento emocional.';
+      } else {
+        return 'Resultado Rosemberg: AUTOESTIMA SAUDÁVEL.\n\nPercepção de autovalorização positiva, segura e equilibrada.';
+      }
     }
 
     return 'Triagem Concluída.\n\nDados computados com sucesso para o relatório do paciente.';
   }
-}
