@@ -1,24 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import '../dados/banco_perguntas.dart';
-import '../dados/gerador_pdf.dart';
-import '../dados/servico_historico.dart';
+import '../dados/analisador_resultados.dart';
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
-  final String nomePaciente;
-  final String idadePaciente;
-  final String instituicao;
-
-  const TelaQuestionario({
-    super.key, 
-    required this.nomeDoTeste,
-    required this.nomePaciente,
-    required this.idadePaciente,
-    required this.instituicao,
-  });
+  const TelaQuestionario({super.key, required this.nomeDoTeste});
 
   @override
   State<TelaQuestionario> createState() => _TelaQuestionarioState();
@@ -26,7 +12,7 @@ class TelaQuestionario extends StatefulWidget {
 
 class _TelaQuestionarioState extends State<TelaQuestionario> {
   int _indicePerguntaAtual = 0;
-  double _pontuacaoTotal = 0.0;
+  double _pontuacaoTotal = 0.0; // Mudado para double para aceitar os pontos da CARS
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +20,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         ['Nenhuma pergunta cadastrada para este teste inicial.'];
 
     double progresso = (_indicePerguntaAtual + 1) / listaPerguntas.length;
+
     bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
     bool ehCars = widget.nomeDoTeste.contains('CARS');
 
@@ -71,29 +58,21 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
             ),
             const SizedBox(height: 24),
             
+            // Controle de Botões por Escala Científica
             if (ehMchat) ...[
-              _construirOpcaoResposta('Sim', () => _processarRespostaMchat('Sim', listaPerguntas)),
-              _construirOpcaoResposta('Não', () => _processarRespostaMchat('Não', listaPerguntas)),
+              _construirOpcao('Sim', () => _processarAcao('Sim', listaPerguntas)),
+              _construirOpcao('Não', () => _processarAcao('Não', listaPerguntas)),
             ] else if (ehCars) ...[
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: [
-                  _construirBotaoNumerico('1.0', 1.0, listaPerguntas),
-                  _construirBotaoNumerico('1.5', 1.5, listaPerguntas),
-                  _construirBotaoNumerico('2.0', 2.0, listaPerguntas),
-                  _construirBotaoNumerico('2.5', 2.5, listaPerguntas),
-                  _construirBotaoNumerico('3.0', 3.0, listaPerguntas),
-                  _construirBotaoNumerico('3.5', 3.5, listaPerguntas),
-                  _construirBotaoNumerico('4.0', 4.0, listaPerguntas),
-                ],
-              ),
+              _construirOpcao('Nota 1.0 - Dentro do esperado', () => _processarAcao('1.0', listaPerguntas)),
+              _construirOpcao('Nota 2.0 - Levemente anormal', () => _processarAcao('2.0', listaPerguntas)),
+              _construirOpcao('Nota 3.0 - Moderadamente anormal', () => _processarAcao('3.0', listaPerguntas)),
+              _construirOpcao('Nota 4.0 - Severamente anormal', () => _processarAcao('4.0', listaPerguntas)),
             ] else ...[
-              _construirOpcaoResposta('Nunca', () => _processarRespostaPadrao(0, listaPerguntas)),
-              _construirOpcaoResposta('Raramente', () => _processarRespostaPadrao(1, listaPerguntas)),
-              _construirOpcaoResposta('Às vezes', () => _processarRespostaPadrao(2, listaPerguntas)),
-              _construirOpcaoResposta('Frequentemente', () => _processarRespostaPadrao(3, listaPerguntas)),
-              _construirOpcaoResposta('Sempre', () => _processarRespostaPadrao(4, listaPerguntas)),
+              _construirOpcao('Nunca', () => _processarAcao('Nunca', listaPerguntas)),
+              _construirOpcao('Raramente', () => _processarAcao('Raramente', listaPerguntas)),
+              _construirOpcao('Às vezes', () => _processarAcao('Às vezes', listaPerguntas)),
+              _construirOpcao('Frequentemente', () => _processarAcao('Frequentemente', listaPerguntas)),
+              _construirOpcao('Sempre', () => _processarAcao('Sempre', listaPerguntas)),
             ],
           ],
         ),
@@ -101,99 +80,48 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     );
   }
 
-  void _processarRespostaPadrao(int pontos, List<String> totalPerguntas) {
-    _pontuacaoTotal += pontos;
-    _proximaEtapa(totalPerguntas);
-  }
+  void _processarAcao(String alternativa, List<String> totalPerguntas) {
+    double pontos = 0.0;
 
-  void _processarRespostaMchat(String resposta, List<String> totalPerguntas) {
-    int numeroPergunta = _indicePerguntaAtual + 1;
-    if (numeroPergunta == 2 || numeroPergunta == 5 || numeroPergunta == 12) {
-      if (resposta == 'Sim') {
-        _pontuacaoTotal += 1;
-      }
+    if (widget.nomeDoTeste.contains('M-CHAT') && alternativa == 'Não') {
+      pontos = 1.0; // Pontuação de risco reversa do M-CHAT
+    } else if (widget.nomeDoTeste.contains('CARS')) {
+      pontos = double.parse(alternativa); // Converte nota de texto para número decimal
     } else {
-      if (resposta == 'Não') {
-        _pontuacaoTotal += 1;
-      }
+      // Escala Likert de 5 pontos tradicional
+      if (alternativa == 'Raramente') pontos = 1.0;
+      if (alternativa == 'Às vezes') pontos = 2.0;
+      if (alternativa == 'Frequentemente') pontos = 3.0;
+      if (alternativa == 'Sempre') pontos = 4.0;
     }
-    _proximaEtapa(totalPerguntas);
-  }
 
-  void _proximaEtapa(List<String> totalPerguntas) {
+    _pontuacaoTotal += pontos;
+
     if (_indicePerguntaAtual < totalPerguntas.length - 1) {
       setState(() {
         _indicePerguntaAtual++;
       });
     } else {
-      String classificacao = '';
-      if (widget.nomeDoTeste.contains('M-CHAT')) {
-        if (_pontuacaoTotal <= 2) {
-          classificacao = 'Risco Baixo.';
-        } else if (_pontuacaoTotal <= 7) {
-          classificacao = 'Risco Moderado.';
-        } else {
-          classificacao = 'Risco Alto.';
-        }
-      } else if (widget.nomeDoTeste.contains('CARS')) {
-        if (_pontuacaoTotal < 30) {
-          classificacao = 'Sem Autismo.';
-        } else if (_pontuacaoTotal < 37) {
-          classificacao = 'Autismo Leve/Mod.';
-        } else {
-          classificacao = 'Autismo Grave.';
-        }
-      } else {
-        classificacao = 'Pontuação Registrada.';
-      }
-
-      ServicoHistorico.salvarRelatorio(
-        nome: widget.nomePaciente,
-        teste: widget.nomeDoTeste,
-        pontuacao: _pontuacaoTotal.toString(),
-        classificacao: classificacao,
-      );
-
-      _exibirResultadoFinal(classificacao);
+      _exibirResultadoFinal();
     }
   }
 
-  Future<void> _exportarECompartilharPdf(String classificacao) async {
-    final docPdf = GeradorPdf.criarDocumento(
-      widget.nomeDoTeste, 
-      _pontuacaoTotal, 
-      classificacao,
-      nome: widget.nomePaciente,
-      idade: widget.idadePaciente,
-      instituicao: widget.instituicao,
-    );
-    final bytes = await docPdf.save();
-    
-    final diretorioTemporario = await getTemporaryDirectory();
-    final caminhoArquivo = '${diretorioTemporario.path}/Relatorio_${widget.nomePaciente.replaceAll(' ', '_')}.pdf';
-    final arquivo = File(caminhoArquivo);
-    await arquivo.writeAsBytes(bytes);
+  void _exibirResultadoFinal() {
+    final avaliacaoTexto = AnalisadorResultados.obterAvaliacao(widget.nomeDoTeste, _pontuacaoTotal);
 
-    await Share.shareXFiles([XFile(caminhoArquivo)], text: 'Segue o relatório de triagem do NeuroApp.');
-  }
-
-  void _exibirResultadoFinal(String classificacao) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Text(
-            'Avaliado: ${widget.nomePaciente}\nPontuação total: $_pontuacaoTotal pontos.\n\nClassificação: $classificacao\n\nEste resultado serve como um rastreio inicial.',
-            style: const TextStyle(fontSize: 16),
+          content: SingleChildScrollView(
+            child: Text(
+              'Pontuação obtida: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
+              style: const TextStyle(fontSize: 16),
+            ),
           ),
           actions: [
-            TextButton.icon(
-              icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
-              label: const Text('Exportar PDF', style: TextStyle(color: Colors.red, fontSize: 16)),
-              onPressed: () => _exportarECompartilharPdf(classificacao),
-            ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -207,7 +135,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     );
   }
 
-  Widget _construirOpcaoResposta(String texto, VoidCallback aoPressionar) {
+  Widget _construirOpcao(String texto, VoidCallback aoPressionar) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: OutlinedButton(
@@ -218,32 +146,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           alignment: Alignment.centerLeft,
         ),
-        child: Text(
-          texto,
-          style: const TextStyle(fontSize: 16, color: Colors.deepPurple, fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
-  }
-
-  Widget _construirBotaoNumerico(String texto, double valor, List<String> totalPerguntas) {
-    return SizedBox(
-      width: 70,
-      height: 50,
-      child: OutlinedButton(
-        onPressed: () {
-          _pontuacaoTotal += valor;
-          _proximaEtapa(totalPerguntas);
-        },
-        style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Colors.deepPurple),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: EdgeInsets.zero,
-        ),
-        child: Text(
-          texto,
-          style: const TextStyle(fontSize: 16, color: Colors.deepPurple, fontWeight: FontWeight.bold),
-        ),
+        child: Text(texto, style: const TextStyle(fontSize: 16, color: Colors.deepPurple, fontWeight: FontWeight.w600)),
       ),
     );
   }
