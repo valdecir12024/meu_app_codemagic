@@ -46,7 +46,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          cross WITHOUT bounds: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             LinearProgressIndicator(
               value: progresso,
