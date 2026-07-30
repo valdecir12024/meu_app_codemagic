@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
 import '../dados/servico_historico.dart';
+import '../servicos/servicos_pdf.dart'; // Importa o seu serviço de PDF
 
 class TelaHistorico extends StatelessWidget {
   const TelaHistorico({super.key});
+
+  // Função auxiliar interna para gerar as iniciais automaticamente (Conformidade LGPD)
+  String _extrairIniciais(String nomeCompleto) {
+    if (nomeCompleto.trim().isEmpty) return 'P.A.';
+    List<String> partes = nomeCompleto.trim().split(' ');
+    String iniciais = '';
+    for (var parte in partes) {
+      if (parte.isNotEmpty) {
+        iniciais += '${parte[0].toUpperCase()}.';
+      }
+    }
+    return iniciais;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +51,16 @@ class TelaHistorico extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = historico[index];
               
-              // Garante a leitura correta das chaves salvas pela tela do questionário
               final nomePaciente = item['nomePaciente'] ?? item['nome'] ?? 'Paciente';
               final nomeTeste = item['nomeTeste'] ?? item['teste'] ?? 'Teste Não Informado';
               final dataFormatada = item['data'] ?? 'Sem data';
-              final pontuacaoObtida = item['pontuacao'] ?? 0;
+              
+              // Recupera a pontuação tratando se ela vier como String ou número
+              final rawPontuacao = item['pontuacao'] ?? 0.0;
+              final double pontuacaoObtida = double.tryParse(rawPontuacao.toString()) ?? 0.0;
+              
+              // Garante a recuperação do texto descritivo clínico que salvamos
+              final classificacaoClinica = item['classificacao'] ?? 'Triagem concluída com sucesso.';
 
               return Card(
                 elevation: 1,
@@ -58,9 +77,21 @@ class TelaHistorico extends StatelessWidget {
                   ),
                   subtitle: Text('$nomeTeste\nData: $dataFormatada • Pontos: $pontuacaoObtida'),
                   isThreeLine: true,
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    // Próxima aplicação de agrupamento: acionar a abertura do PDF
+                  trailing: const Icon(Icons.share, color: Colors.deepPurple), // Ícone mudado para representar compartilhamento
+                  onTap: () async {
+                    // AMARRAÇÃO COMPLETA: Dispara o seu serviço de PDF nativo!
+                    final iniciais = _extrairIniciais(nomePaciente);
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Gerando laudo em PDF para $iniciais...')),
+                    );
+
+                    await ServicoPdf.gerarECompartilharLaudo(
+                      iniciaisPaciente: iniciais,
+                      nomeDoTeste: nomeTeste,
+                      pontuacao: pontuacaoObtida,
+                      recomendacao: classificacaoClinica,
+                    );
                   },
                 ),
               );
