@@ -38,7 +38,7 @@ class AnalisadorResultados {
     return _obterAvaliacaoParte2(nomeDoTeste, pontuacao);
   }
 
-   static String _obterAvaliacaoParte2(String nomeDoTeste, num pontuacao) {
+  static String _obterAvaliacaoParte2(String nomeDoTeste, num pontuacao) {
     // 2. ESCALAS DE COMPORTAMENTO E TDAH
     if (nomeDoTeste.contains('ASRS-18') || nomeDoTeste.contains('SNAP-IV')) {
       if (pontuacao >= 12) return 'Resultado: ACIMA DO PONTO DE CORTE.\n\nIndicativo forte de sintomas clássicos de TDAH. Recomendável investigação clínica.';
@@ -50,7 +50,7 @@ class AnalisadorResultados {
       return 'Resultado: Conduta Adequada.\n\nComportamento social e adaptativo dentro da média.';
     }
 
-    // CORREÇÃO: Adicionada a regra oficial para a Escala Basic 3
+    // ADICIONADA: Regra oficial para a Escala Basic 3
     if (nomeDoTeste.contains('Basic 3')) {
       if (pontuacao < 10) {
         return 'Resultado Basic 3: ALERTA NO DESENVOLVIMENTO.\n\nA pontuação total ficou abaixo do esperado para a faixa etária. Recomendada triagem neuropsicológica complementar.';
@@ -71,7 +71,7 @@ class AnalisadorResultados {
       return 'Resultado: Nível de Ansiedade Típico.\n\nReações emocionais normais para a faixa etária.';
     }
 
-    // CORREÇÃO: Garantindo o texto descritivo cirúrgico para a escala de Rosemberg
+    // Garantindo o texto descritivo cirúrgico para a escala de Rosemberg
     if (nomeDoTeste.contains('Rosemberg')) {
       if (pontuacao <= 15) {
         return 'Resultado Rosemberg: AUTOESTIMA BAIXA.\n\nO escore indica a presença de sentimentos de desvalorização pessoal e insegurança. Recomendável suporte e acolhimento emocional.';
@@ -82,3 +82,4 @@ class AnalisadorResultados {
 
     return 'Triagem Concluída.\n\nDados computados com sucesso para o relatório do paciente.';
   }
+}
