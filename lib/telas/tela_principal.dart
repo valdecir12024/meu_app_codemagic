@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
 import 'tela_identificacao.dart';
+import 'tela_historico.dart';
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
 
@@ -15,12 +16,22 @@ class TelaPrincipal extends StatelessWidget {
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+                   actions: [
+           // NOVO: Botão para abrir o histórico local
+           IconButton(
+             icon: const Icon(Icons.history),
+             onPressed: () {
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context) => const TelaHistorico()),
+               );
+             },
+           ),
+           IconButton(
+             icon: const Icon(Icons.exit_to_app),
+             onPressed: () => Navigator.pop(context),
+           ),
+         ],
           bottom: const TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,

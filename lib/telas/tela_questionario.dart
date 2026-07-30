@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../dados/banco_perguntas.dart';
 import '../dados/gerador_pdf.dart';
+import '../dados/servico_historico.dart';
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
@@ -125,7 +126,35 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         _indicePerguntaAtual++;
       });
     } else {
-      _exibirResultadoFinal();
+      String classificacao = '';
+      if (widget.nomeDoTeste.contains('M-CHAT')) {
+        if (_pontuacaoTotal <= 2) {
+          classificacao = 'Risco Baixo.';
+        } else if (_pontuacaoTotal <= 7) {
+          classificacao = 'Risco Moderado.';
+        } else {
+          classificacao = 'Risco Alto.';
+        }
+      } else if (widget.nomeDoTeste.contains('CARS')) {
+        if (_pontuacaoTotal < 30) {
+          classificacao = 'Sem Autismo.';
+        } else if (_pontuacaoTotal < 37) {
+          classificacao = 'Autismo Leve/Mod.';
+        } else {
+          classificacao = 'Autismo Grave.';
+        }
+      } else {
+        classificacao = 'Pontuação Registrada.';
+      }
+
+      ServicoHistorico.salvarRelatorio(
+        nome: widget.nomePaciente,
+        teste: widget.nomeDoTeste,
+        pontuacao: _pontuacaoTotal.toString(),
+        classificacao: classificacao,
+      );
+
+      _exibirResultadoFinal(classificacao);
     }
   }
 
@@ -145,30 +174,10 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     final arquivo = File(caminhoArquivo);
     await arquivo.writeAsBytes(bytes);
 
-    // Atualizado para o método moderno do share_plus sem avisos descontinuados
     await Share.shareXFiles([XFile(caminhoArquivo)], text: 'Segue o relatório de triagem do NeuroApp.');
   }
 
-  void _exibirResultadoFinal() {
-    String classificacao = '';
-    if (widget.nomeDoTeste.contains('M-CHAT')) {
-      if (_pontuacaoTotal <= 2) {
-        classificacao = 'Risco Baixo.';
-      } else if (_pontuacaoTotal <= 7) {
-        classificacao = 'Risco Moderado.';
-      } else {
-        classificacao = 'Risco Alto.';
-      }
-    } else if (widget.nomeDoTeste.contains('CARS')) {
-      if (_pontuacaoTotal < 30) {
-        classificacao = 'Sem Autismo (Abaixo do ponto de corte).';
-      } else if (_pontuacaoTotal < 37) {
-        classificacao = 'Autismo Leve a Moderado.';
-      } else {
-        classificacao = 'Autismo Grave.';
-      }
-    }
-
+  void _exibirResultadoFinal(String classificacao) {
     showDialog(
       context: context,
       barrierDismissible: false,
