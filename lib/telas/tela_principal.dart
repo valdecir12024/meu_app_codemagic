@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
-
+import 'tela_identificacao.dart';
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
 
@@ -84,11 +84,10 @@ class TelaPrincipal extends StatelessWidget {
             subtitle: const Text('Toque para iniciar a triagem inicial'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TelaQuestionario(nomeDoTeste: testes[index]),
-                ),
+             Navigator.push(
+            context,
+             MaterialPageRoute(
+            builder: (context) => TelaIdentificacao(nomeDoTeste: testes[index]),     ),
               );
             },
           ),
