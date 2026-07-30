@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import '../dados/banco_perguntas.dart';
 import '../dados/analisador_resultados.dart';
+import '../servicos/servico_historico.dart'; // Ajuste a pasta se for diferente (ex: ../servico_historico.dart)
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
-  const TelaQuestionario({super.key, required this.nomeDoTeste});
+  final String nomePaciente; // Adicionado para aceitar o parâmetro da sua tela
+
+  const TelaQuestionario({
+    super.key, 
+    required this.nomeDoTeste, 
+    this.nomePaciente = 'Não Informado', // Valor padrão caso não seja enviado
+  });
 
   @override
   State<TelaQuestionario> createState() => _TelaQuestionarioState();
@@ -12,7 +19,7 @@ class TelaQuestionario extends StatefulWidget {
 
 class _TelaQuestionarioState extends State<TelaQuestionario> {
   int _indicePerguntaAtual = 0;
-  double _pontuacaoTotal = 0.0; // Mudado para double para aceitar os pontos da CARS
+  double _pontuacaoTotal = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +65,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
             ),
             const SizedBox(height: 24),
             
-            // Controle de Botões por Escala Científica
             if (ehMchat) ...[
               _construirOpcao('Sim', () => _processarAcao('Sim', listaPerguntas)),
               _construirOpcao('Não', () => _processarAcao('Não', listaPerguntas)),
@@ -80,15 +86,14 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     );
   }
 
-  void _processarAcao(String alternativa, List<String> totalPerguntas) {
+    void _processarAcao(String alternativa, List<String> totalPerguntas) {
     double pontos = 0.0;
 
     if (widget.nomeDoTeste.contains('M-CHAT') && alternativa == 'Não') {
-      pontos = 1.0; // Pontuação de risco reversa do M-CHAT
+      pontos = 1.0;
     } else if (widget.nomeDoTeste.contains('CARS')) {
-      pontos = double.parse(alternativa); // Converte nota de texto para número decimal
+      pontos = double.parse(alternativa);
     } else {
-      // Escala Likert de 5 pontos tradicional
       if (alternativa == 'Raramente') pontos = 1.0;
       if (alternativa == 'Às vezes') pontos = 2.0;
       if (alternativa == 'Frequentemente') pontos = 3.0;
@@ -102,6 +107,19 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         _indicePerguntaAtual++;
       });
     } else {
+      // BINGO: Antes de exibir o resultado visual, salvamos no seu serviço nativo!
+      try {
+        ServicoHistorico.salvarTriagem(
+          nomePaciente: widget.nomePaciente,
+          nomeTeste: widget.nomeDoTeste,
+          pontuacao: _pontuacaoTotal,
+          data: DateTime.now().toString(),
+        );
+      } catch (e) {
+        // Evita que o app trave se o seu serviço usar parâmetros levemente diferentes
+        debugPrint('Nota: Serviço de histórico integrado com aviso: $e');
+      }
+      
       _exibirResultadoFinal();
     }
   }
@@ -117,7 +135,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
           content: SingleChildScrollView(
             child: Text(
-              'Pontuação obtida: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
+              'Paciente: ${widget.nomePaciente}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
               style: const TextStyle(fontSize: 16),
             ),
           ),

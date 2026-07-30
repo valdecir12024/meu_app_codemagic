@@ -22,7 +22,10 @@ class TelaHistorico extends StatelessWidget {
           
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
-              child: Text('Nenhum relatório salvo no histórico local.', style: TextStyle(fontSize: 16, color: Colors.grey)),
+              child: Text(
+                'Nenhum relatório salvo no histórico local.', 
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
             );
           }
 
@@ -33,22 +36,31 @@ class TelaHistorico extends StatelessWidget {
             itemCount: historico.length,
             itemBuilder: (context, index) {
               final item = historico[index];
+              
+              // Garante a leitura correta das chaves salvas pela tela do questionário
+              final nomePaciente = item['nomePaciente'] ?? item['nome'] ?? 'Paciente';
+              final nomeTeste = item['nomeTeste'] ?? item['teste'] ?? 'Teste Não Informado';
+              final dataFormatada = item['data'] ?? 'Sem data';
+              final pontuacaoObtida = item['pontuacao'] ?? 0;
+
               return Card(
                 elevation: 1,
                 margin: const EdgeInsets.only(bottom: 12.0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                   leading: CircleAvatar(
-                    // Removido o const de cima para permitir o cálculo da opacidade de forma limpa
                     backgroundColor: Colors.red.withOpacity(0.1),
                     child: const Icon(Icons.picture_as_pdf, color: Colors.red),
                   ),
-                  title: Text(item['nome'] ?? 'Paciente', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text('${item['teste']}\nData: ${item['data']} • Pontos: ${item['pontuacao']}'),
+                  title: Text(
+                    nomePaciente, 
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text('$nomeTeste\nData: $dataFormatada • Pontos: $pontuacaoObtida'),
                   isThreeLine: true,
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    // Abertura futura
+                    // Próxima aplicação de agrupamento: acionar a abertura do PDF
                   },
                 ),
               );
