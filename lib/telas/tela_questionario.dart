@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import '../dados/banco_perguntas.dart';
 import '../dados/analisador_resultados.dart';
-import '../servicos/servico_historico.dart'; // Ajuste a pasta se for diferente (ex: ../servico_historico.dart)
+import '../dados/servico_historico.dart'; // CORRIGIDO: Aponta para a pasta dados
 
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
-  final String nomePaciente; // Adicionado para aceitar o parâmetro da sua tela
+  final String nomePaciente;
+  final String idadePaciente; // ADICIONADO: Parâmetro para sanar o erro de chamada
 
   const TelaQuestionario({
     super.key, 
     required this.nomeDoTeste, 
-    this.nomePaciente = 'Não Informado', // Valor padrão caso não seja enviado
+    this.nomePaciente = 'Não Informado',
+    this.idadePaciente = 'Não Informada', // Parâmetro opcional com valor padrão
   });
 
   @override
@@ -86,7 +88,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     );
   }
 
-    void _processarAcao(String alternativa, List<String> totalPerguntas) {
+  void _processarAcao(String alternativa, List<String> totalPerguntas) {
     double pontos = 0.0;
 
     if (widget.nomeDoTeste.contains('M-CHAT') && alternativa == 'Não') {
@@ -107,8 +109,8 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
         _indicePerguntaAtual++;
       });
     } else {
-      // BINGO: Antes de exibir o resultado visual, salvamos no seu serviço nativo!
       try {
+        // CORRIGIDO: Agora invoca o serviço utilizando as chaves corretas e capturando erros
         ServicoHistorico.salvarTriagem(
           nomePaciente: widget.nomePaciente,
           nomeTeste: widget.nomeDoTeste,
@@ -116,8 +118,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           data: DateTime.now().toString(),
         );
       } catch (e) {
-        // Evita que o app trave se o seu serviço usar parâmetros levemente diferentes
-        debugPrint('Nota: Serviço de histórico integrado com aviso: $e');
+        debugPrint('Erro ao persistir os dados da triagem: $e');
       }
       
       _exibirResultadoFinal();
@@ -135,7 +136,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
           content: SingleChildScrollView(
             child: Text(
-              'Paciente: ${widget.nomePaciente}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
+              'Paciente: ${widget.nomePaciente}\nIdade: ${widget.idadePaciente}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
               style: const TextStyle(fontSize: 16),
             ),
           ),
