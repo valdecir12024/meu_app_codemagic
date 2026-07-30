@@ -72,12 +72,12 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
             if (ehMchat) ...[
               _construirOpcao('Sim', () => _processarAcao('Sim', listaPerguntas)),
               _construirOpcao('Não', () => _processarAcao('Não', listaPerguntas)),
-            ] else if (ehCars) ...[
-              _construirOpcao('Nota 1.0 - Dentro do esperado', () => _processarAcao('1.0', listaPerguntas)),
-              _construirOpcao('Nota 2.0 - Levemente anormal', () => _processarAcao('2.0', listaPerguntas)),
-              _construirOpcao('Nota 3.0 - Moderadamente anormal', () => _processarAcao('3.0', listaPerguntas)),
-              _construirOpcao('Nota 4.0 - Severamente anormal', () => _processarAcao('4.0', listaPerguntas)),
-            ] else ...[
+                        ] else if (ehCars) ...[
+              _construirOpcao('Nota 1.0 ou 1.5 - Sintomas Normais/Leves', () => _processarAcao('1.0', listaPerguntas)),
+              _construirOpcao('Nota 2.0 ou 2.5 - Sintomas Leves/Moderados', () => _processarAcao('2.0', listaPerguntas)),
+              _construirOpcao('Nota 3.0 or 3.5 - Sintomas Moderados/Graves', () => _processarAcao('3.0', listaPerguntas)),
+              _construirOpcao('Nota 4.0 - Sintomas Severos', () => _processarAcao('4.0', listaPerguntas)),
+            ]else ...[
               _construirOpcao('Nunca', () => _processarAcao('Nunca', listaPerguntas)),
               _construirOpcao('Raramente', () => _processarAcao('Raramente', listaPerguntas)),
               _construirOpcao('Às vezes', () => _processarAcao('Às vezes', listaPerguntas)),
@@ -99,7 +99,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       pontos = double.parse(alternativa);
     } else {
       if (alternativa == 'Raramente') pontos = 1.0;
-      if (alternativa == 'Às vezes') neighborhood_points = 2.0;
       if (alternativa == 'Às vezes') pontos = 2.0;
       if (alternativa == 'Frequentemente') pontos = 3.0;
       if (alternativa == 'Sempre') pontos = 4.0;
