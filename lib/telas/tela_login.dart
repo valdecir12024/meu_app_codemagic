@@ -14,26 +14,32 @@ class TelaLogin extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(Icons.rocket_launch, size: 80, color: Colors.deepPurple),
+            // Aplicação 2: Preparado para receber a logo oficial do NeuroApp
+            // Por enquanto exibe o ícone clínico padrão-ouro até você mapear o arquivo de imagem
+            const Icon(
+              Icons.psychology, 
+              size: 90, 
+              color: Colors.deepPurple
+            ),
             const SizedBox(height: 16),
             const Text(
-              'Bem-vindo ao NeuroApp',
+              'NeuroApp',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.deepPurple),
             ),
             const SizedBox(height: 32),
             const TextField(
               decoration: InputDecoration(
-                labelText: 'E-mail',
+                labelText: 'E-mail ou Registro Profissional',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: Icon(Icons.assignment_ind),
               ),
             ),
             const SizedBox(height: 16),
             const TextField(
               obscureText: true,
               decoration: InputDecoration(
-                labelText: 'Senha',
+                labelText: 'Senha de Acesso',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock),
               ),
@@ -50,8 +56,9 @@ class TelaLogin extends StatelessWidget {
                 backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text('Entrar', style: TextStyle(fontSize: 18)),
+              child: const Text('Acessar Painel', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

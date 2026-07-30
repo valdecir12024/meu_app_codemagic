@@ -1,19 +1,50 @@
 import 'package:flutter/material.dart';
 import '../dados/servico_historico.dart';
-import '../servicos/servicos_pdf.dart'; // Importa o seu serviço de PDF
+import '../servicos/servicos_pdf.dart';
 
-class TelaHistorico extends StatelessWidget {
+class TelaHistorico extends StatefulWidget {
   const TelaHistorico({super.key});
 
-  // Função auxiliar interna para gerar as iniciais automaticamente (Conformidade LGPD)
+  @override
+  State<TelaHistorico> createState() => _TelaHistoricoState();
+}
+
+class _TelaHistoricoState extends State<TelaHistorico> {
+  List<Map<String, dynamic>> _historicoCompleto = [];
+  List<Map<String, dynamic>> _historicoFiltrado = [];
+  bool _carregando = true;
+  final TextEditingController _buscaController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarDados();
+  }
+
+  Future<void> _carregarDados() async {
+    final dados = await ServicoHistorico.obterHistorico();
+    setState(() {
+      _historicoCompleto = dados;
+      _historicoFiltrado = dados;
+      _carregando = false;
+    });
+  }
+
+  void _filtrarPacientes(String textoDigitado) {
+    setState(() {
+      _historicoFiltrado = _historicoCompleto.where((item) {
+        final nome = (item['nomePaciente'] ?? item['nome'] ?? '').toString().toLowerCase();
+        return nome.contains(textoDigitado.toLowerCase());
+      }).toList();
+    });
+  }
+
   String _extrairIniciais(String nomeCompleto) {
     if (nomeCompleto.trim().isEmpty) return 'P.A.';
     List<String> partes = nomeCompleto.trim().split(' ');
     String iniciais = '';
     for (var parte in partes) {
-      if (parte.isNotEmpty) {
-        iniciais += '${parte[0].toUpperCase()}.';
-      }
+      if (parte.isNotEmpty) iniciais += '${parte.toUpperCase()}.';
     }
     return iniciais;
   }
@@ -27,78 +58,71 @@ class TelaHistorico extends StatelessWidget {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: ServicoHistorico.obterHistorico(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.deepPurple));
-          }
-          
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'Nenhum relatório salvo no histórico local.', 
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            );
-          }
-
-          final historico = snapshot.data!;
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: historico.length,
-            itemBuilder: (context, index) {
-              final item = historico[index];
-              
-              final nomePaciente = item['nomePaciente'] ?? item['nome'] ?? 'Paciente';
-              final nomeTeste = item['nomeTeste'] ?? item['teste'] ?? 'Teste Não Informado';
-              final dataFormatada = item['data'] ?? 'Sem data';
-              
-              // Recupera a pontuação tratando se ela vier como String ou número
-              final rawPontuacao = item['pontuacao'] ?? 0.0;
-              final double pontuacaoObtida = double.tryParse(rawPontuacao.toString()) ?? 0.0;
-              
-              // Garante a recuperação do texto descritivo clínico que salvamos
-              final classificacaoClinica = item['classificacao'] ?? 'Triagem concluída com sucesso.';
-
-              return Card(
-                elevation: 1,
-                margin: const EdgeInsets.only(bottom: 12.0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.red.withOpacity(0.1),
-                    child: const Icon(Icons.picture_as_pdf, color: Colors.red),
+      body: _carregando
+          ? const Center(child: CircularProgressIndicator(color: Colors.deepPurple))
+          : Column(
+              children: [
+                // Aplicação 1: Barra de pesquisa integrada
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: _buscaController,
+                    onChanged: _filtrarPacientes,
+                    decoration: InputDecoration(
+                      labelText: 'Buscar paciente por nome...',
+                      prefixIcon: const Icon(Icons.search, color: Colors.deepPurple),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
-                  title: Text(
-                    nomePaciente, 
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('$nomeTeste\nData: $dataFormatada • Pontos: $pontuacaoObtida'),
-                  isThreeLine: true,
-                  trailing: const Icon(Icons.share, color: Colors.deepPurple), // Ícone mudado para representar compartilhamento
-                  onTap: () async {
-                    // AMARRAÇÃO COMPLETA: Dispara o seu serviço de PDF nativo!
-                    final iniciais = _extrairIniciais(nomePaciente);
-                    
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Gerando laudo em PDF para $iniciais...')),
-                    );
-
-                    await ServicoPdf.gerarECompartilharLaudo(
-                      iniciaisPaciente: iniciais,
-                      nomeDoTeste: nomeTeste,
-                      pontuacao: pontuacaoObtida,
-                      recomendacao: classificacaoClinica,
-                    );
-                  },
                 ),
-              );
-            },
-          );
-        },
-      ),
+                Expanded(
+                  child: _historicoFiltrado.isEmpty
+                      ? const Center(child: Text('Nenhum relatório correspondente.'))
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          itemCount: _historicoFiltrado.length,
+                          itemBuilder: (context, index) {
+                            final item = _historicoFiltrado[index];
+                            final nomePaciente = item['nomePaciente'] ?? item['nome'] ?? 'Paciente';
+                            final nomeTeste = item['nomeTeste'] ?? item['teste'] ?? 'Teste';
+                            final dataFormatada = item['data'] ?? 'Sem data';
+                            final double pontuacaoObtida = double.tryParse((item['pontuacao'] ?? 0).toString()) ?? 0.0;
+                            final classificacaoClinica = item['classificacao'] ?? 'Triagem concluída.';
+
+                            return Card(
+                              elevation: 1,
+                              margin: const EdgeInsets.only(bottom: 12.0),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  child: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                                ),
+                                title: Text(nomePaciente, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                subtitle: Text('$nomeTeste\nData: $dataFormatada • Pontos: $pontuacaoObtida'),
+                                isThreeLine: true,
+                                trailing: const Icon(Icons.share, color: Colors.deepPurple),
+                                onTap: () async {
+                                  final iniciais = _extrairIniciais(nomePaciente);
+                                  await ServicoPdf.gerarECompartilharLaudo(
+                                    iniciaisPaciente: iniciais,
+                                    nomeDoTeste: nomeTeste,
+                                    pontuacao: pontuacaoObtida,
+                                    recomendacao: classificacaoClinica,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
     );
   }
 }
