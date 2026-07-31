@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
-import 'tela_identificacao.dart';
-import 'tela_historico.dart';
-import 'tela_manual.dart';
+import 'tela_manual.dart'; // Mantém o import correto do guia técnico
 
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Configura 3 abas de navegação (Neuro, Comportamento, Socioemocional)
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -18,17 +17,7 @@ class TelaPrincipal extends StatelessWidget {
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
-                   actions: [
-           // NOVO: Botão para abrir o histórico local
-           IconButton(
-             icon: const Icon(Icons.history),
-             onPressed: () {
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context) => const TelaHistorico()),
-               );
-             },
-           ),
+          // AMARRAÇÃO CORRIGIDA: Botões superiores totalmente alinhados e fechados
           actions: [
             IconButton(
               icon: const Icon(Icons.menu_book),
@@ -45,11 +34,6 @@ class TelaPrincipal extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
           ],
-           IconButton(
-             icon: const Icon(Icons.exit_to_app),
-             onPressed: () => Navigator.pop(context),
-           ),
-         ],
           bottom: const TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
@@ -64,7 +48,7 @@ class TelaPrincipal extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-          // Aba 1: Neuro (Atualizada com as suas escalas oficiais)
+            // Aba 1: Neuro (Alinhada com as suas escalas oficiais)
             _construirListaTestes([
               'M-CHAT-R/F (TEA Inicial)',
               'Escala CARS (Autismo Infantil)',
@@ -74,17 +58,20 @@ class TelaPrincipal extends StatelessWidget {
               'Triagem de Atenção Visual',
               'Memória de Curto Prazo',
             ], Colors.blue),
-          // Aba 2: Comportamento (Alinhada perfeitamente com os nomes do banco)
+
+            // Aba 2: Comportamento (Alinhada com as escalas reais)
             _construirListaTestes([
-              'SNAP-IV (TDAH 18 Itens)',
-              'Escala Conners (10 Perguntas)',
-              'Escala Basic 3 (12 Perguntas)',
+              'SNAP-IV (TDAH e TOD Inicial)',
+              'Escala Conners-3 (Conduta e Foco)',
+              'Vanderbilt (Comportamento Escolar)',
+              'Escala Basic 3',
             ], Colors.orange),
-          // Aba 3: Socioemocional (Atualizada com as escalas reais do esqueleto)
+
+            // Aba 3: Socioemocional (Alinhada com os testes de ansiedade/autoestima)
             _construirListaTestes([
-              'Questionário SDQ (Conduta e Emoção)',
-              'Escala SCARED (Triagem de Ansiedade)',
-              'Escala Rosenberg (Autoestima Inicial)',
+              'SDQ (Forças e Dificuldades)',
+              'Escala SCARED (Ansiedade Infantil)',
+              'Escala de Autoestima de Rosemberg',
             ], Colors.green),
           ],
         ),
@@ -92,6 +79,7 @@ class TelaPrincipal extends StatelessWidget {
     );
   }
 
+  // Função auxiliar unificada e protegida para desenhar a lista de testes
   Widget _construirListaTestes(List<String> testes, Color corIcone) {
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
@@ -113,10 +101,12 @@ class TelaPrincipal extends StatelessWidget {
             subtitle: const Text('Toque para iniciar a triagem inicial'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-             Navigator.push(
-            context,
-             MaterialPageRoute(
-            builder: (context) => TelaIdentificacao(nomeDoTeste: testes[index]),     ),
+              // Abre a tela de identificação empurrando o nome do teste selecionado
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TelaIdentificacao(nomeDoTeste: testes[index]),
+                ),
               );
             },
           ),
