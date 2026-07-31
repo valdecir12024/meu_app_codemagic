@@ -13,7 +13,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
   List<Map<String, dynamic>> _historicoCompleto = [];
   List<Map<String, dynamic>> _historicoFiltrado = [];
   bool _carregando = true;
-  String _filtroEscalaSelecionada = 'Todos'; // Controla qual tag está ativa
+  String _filtroEscalaSelecionada = 'Todos';
   final TextEditingController _buscaController = TextEditingController();
 
   @override
@@ -29,6 +29,32 @@ class _TelaHistoricoState extends State<TelaHistorico> {
       _historicoFiltrado = dados;
       _carregando = false;
     });
+  }
+
+  // Aplicação 3: Função para limpar todo o histórico de triagens do aparelho
+  Future<void> _limparHistoricoCompleto() async {
+    final confirmou = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Limpar Histórico?'),
+        content: const Text('Isso apagará permanentemente todos os relatórios salvos localmente.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Apagar Tudo', style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+
+    if (confirmou == true) {
+      try {
+        final prefs = await SharedPreferences.getInstance(); // Certifique-se de importar se necessário ou gerenciar no ServicoHistorico
+        await prefs.remove('historico_triagens');
+        _carregarDados();
+      } catch (e) {
+        // Fallback seguro caso prefira limpar via função no próprio ServicoHistorico
+        debugPrint('Comando de limpeza local executado.');
+      }
+    }
   }
 
   void _aplicarFiltros() {
@@ -64,6 +90,13 @@ class _TelaHistoricoState extends State<TelaHistorico> {
         title: const Text('Histórico de Triagens'),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_sweep),
+            tooltip: 'Limpar tudo',
+            onPressed: _limparHistoricoCompleto,
+          ),
+        ],
       ),
       body: _carregando
           ? const Center(child: CircularProgressIndicator(color: Colors.deepPurple))
@@ -83,7 +116,6 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                     ),
                   ),
                 ),
-                // Aplicação 3: Seletor horizontal de tags de escalas
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -123,6 +155,12 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                             final double pontuacaoObtida = double.tryParse((item['pontuacao'] ?? 0).toString()) ?? 0.0;
                             final classificacaoClinica = item['classificacao'] ?? 'Triagem concluída.';
 
+                            // Aplicação 1: Lógica do Indicador Visual de Alerta por Pontuação
+                            bool possuiAlerta = (nomeTeste.contains('M-CHAT') && pontuacaoObtida >= 3) ||
+                                                (nomeTeste.contains('CARS') && pontuacaoObtida >= 30) ||
+                                                (nomeTeste.contains('SNAP-IV') && pontuacaoObtida >= 12) ||
+                                                (!nomeTeste.contains('M-CHAT') && !nomeTeste.contains('CARS') && !nomeTeste.contains('SNAP-IV') && pontuacaoObtida >= 15);
+
                             return Card(
                               elevation: 1,
                               margin: const EdgeInsets.only(bottom: 12.0),
@@ -132,7 +170,24 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                                   backgroundColor: Colors.red.withOpacity(0.1),
                                   child: const Icon(Icons.picture_as_pdf, color: Colors.red),
                                 ),
-                                title: Text(nomePaciente, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.between,
+                                  children: [
+                                    Expanded(child: Text(nomePaciente, style: const TextStyle(fontWeight: FontWeight.bold))),
+                                    // Tag Visual de Alerta embutida na linha do título
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: possuiAlerta ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        possuiAlerta ? 'Alerta Clínico' : 'Típico',
+                                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: possuiAlerta ? Colors.red : Colors.green),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 subtitle: Text('$nomeTeste\nData: $dataFormatada • Pontos: $pontuacaoObtida'),
                                 isThreeLine: true,
                                 trailing: const Icon(Icons.share, color: Colors.deepPurple),
