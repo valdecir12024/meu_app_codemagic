@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
 import 'tela_manual.dart'; // Mantém o import correto do guia técnico
 import 'tela_identificacao.dart'; // <- Linha adicionada aqui
+import 'tela_perfil.dart';
 
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
@@ -20,6 +21,16 @@ class TelaPrincipal extends StatelessWidget {
           automaticallyImplyLeading: false,
           // AMARRAÇÃO CORRIGIDA: Botões superiores totalmente alinhados e fechados
           actions: [
+            IconButton(
+              icon: const Icon(Icons.person),
+              tooltip: 'Meu Perfil',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TelaPerfil()),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.menu_book),
               tooltip: 'Guia Técnico',
