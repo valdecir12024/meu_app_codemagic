@@ -21,19 +21,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_launcher_icons: ^0.13.1
-
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icones/logo_app.png"
-  adaptive_icon_background: "#673AB7" # Cor de fundo roxa para ícones adaptativos do Android
-  adaptive_icon_foreground: "assets/icones/logo_app.png"
-
+  image_path: "assets/icons/logo_app.png"
+  adaptive_icon_background: "#673AB7"
+  adaptive_icon_foreground: "assets/icons/logo_app.png"
