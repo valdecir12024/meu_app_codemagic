@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
 import 'tela_manual.dart'; // Mantém o import correto do guia técnico
+import 'tela_identificacao.dart'; // <- Linha adicionada aqui
 
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
