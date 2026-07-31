@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'telas/tela_login.dart';
+import 'telas/tela_splash.dart'; // Importa a nova tela de splash
 
 void main() {
   runApp(const MeuAppReal());
@@ -17,7 +17,7 @@ class MeuAppReal extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const TelaLogin(),
+      home: const TelaSplash(), // CORREGIDO: O app agora inicia na Splash de 2 segundos
     );
   }
 }

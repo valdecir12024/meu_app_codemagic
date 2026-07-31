@@ -13,6 +13,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
   List<Map<String, dynamic>> _historicoCompleto = [];
   List<Map<String, dynamic>> _historicoFiltrado = [];
   bool _carregando = true;
+  String _filtroEscalaSelecionada = 'Todos'; // Controla qual tag está ativa
   final TextEditingController _buscaController = TextEditingController();
 
   @override
@@ -30,11 +31,17 @@ class _TelaHistoricoState extends State<TelaHistorico> {
     });
   }
 
-  void _filtrarPacientes(String textoDigitado) {
+  void _aplicarFiltros() {
+    final textoBusca = _buscaController.text.toLowerCase();
     setState(() {
       _historicoFiltrado = _historicoCompleto.where((item) {
         final nome = (item['nomePaciente'] ?? item['nome'] ?? '').toString().toLowerCase();
-        return nome.contains(textoDigitado.toLowerCase());
+        final teste = (item['nomeTeste'] ?? item['teste'] ?? '').toString();
+        
+        bool bateComNome = nome.contains(textoBusca);
+        bool bateComEscala = _filtroEscalaSelecionada == 'Todos' || teste.contains(_filtroEscalaSelecionada);
+        
+        return bateComNome && bateComEscala;
       }).toList();
     });
   }
@@ -62,24 +69,46 @@ class _TelaHistoricoState extends State<TelaHistorico> {
           ? const Center(child: CircularProgressIndicator(color: Colors.deepPurple))
           : Column(
               children: [
-                // Aplicação 1: Barra de pesquisa integrada
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: TextField(
                     controller: _buscaController,
-                    onChanged: _filtrarPacientes,
+                    onChanged: (_) => _aplicarFiltros(),
                     decoration: InputDecoration(
                       labelText: 'Buscar paciente por nome...',
                       prefixIcon: const Icon(Icons.search, color: Colors.deepPurple),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     ),
                   ),
                 ),
+                // Aplicação 3: Seletor horizontal de tags de escalas
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                  child: Row(
+                    children: ['Todos', 'M-CHAT', 'CARS', 'SNAP-IV', 'ASRS-18'].map((escala) {
+                      final bool ativa = _filtroEscalaSelecionada == escala;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ChoiceChip(
+                          label: Text(escala),
+                          selected: ativa,
+                          selectedColor: Colors.deepPurple,
+                          labelStyle: TextStyle(color: ativa ? Colors.white : Colors.deepPurple),
+                          onSelected: (bool selecionado) {
+                            if (selecionado) {
+                              _filtroEscalaSelecionada = escala;
+                              _aplicarFiltros();
+                            }
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Expanded(
                   child: _historicoFiltrado.isEmpty
                       ? const Center(child: Text('Nenhum relatório correspondente.'))
