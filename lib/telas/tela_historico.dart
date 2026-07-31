@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // ADICIONADO: Import para sanar o erro do prefs
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share_plus/share_plus.dart';
 import '../dados/servico_historico.dart';
 import '../servicos/servicos_pdf.dart';
+import 'tela_evolucao.dart';
 
 class TelaHistorico extends StatefulWidget {
   const TelaHistorico({super.key});
@@ -24,12 +26,33 @@ class _TelaHistoricoState extends State<TelaHistorico> {
   }
 
   Future<void> _carregarDados() async {
-    final dados = await ServicoHistorico.obterHistorico();
+    final dados = await ServicoHistorico.obterHistorico(); // Ajuste para 'obtainHistorico' se for o caso
     setState(() {
       _historicoCompleto = dados;
       _historicoFiltrado = dados;
       _carregando = false;
     });
+  }
+
+  // Função para converter o banco em planilha Excel/CSV e compartilhar
+  Future<void> _exportarPlanilhaCSV() async {
+    if (_historicoCompleto.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Não há dados para exportar.')),
+      );
+      return;
+    }
+
+    String csvDados = 'Nome Paciente;Escala Aplicada;Pontuacao;Data\n';
+    for (var item in _historicoCompleto) {
+      final nome = item['nomePaciente'] ?? item['nome'] ?? 'Paciente';
+      final teste = item['nomeTeste'] ?? item['teste'] ?? 'Teste';
+      final pontos = item['pontuacao'] ?? '0';
+      final data = item['data'] ?? 'S/D';
+      csvDados += '$nome;$teste;$pontos;$data\n';
+    }
+
+    await Share.share(csvDados, subject: 'Planilha de Triagens NeuroApp');
   }
 
   Future<void> _limparHistoricoCompleto() async {
@@ -54,7 +77,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
         await prefs.remove('historico_triagens');
         _carregarDados();
       } catch (e) {
-        debugPrint('Erro ao limpar histórico: $e');
+        debugPrint('Erro na limpeza.');
       }
     }
   }
@@ -83,7 +106,6 @@ class _TelaHistoricoState extends State<TelaHistorico> {
     }
     return iniciais;
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +115,11 @@ class _TelaHistoricoState extends State<TelaHistorico> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.table_view),
+            tooltip: 'Exportar Excel/CSV',
+            onPressed: _exportarPlanilhaCSV,
+          ),
           IconButton(
             icon: const Icon(Icons.delete_sweep),
             tooltip: 'Limpar tudo',
@@ -114,7 +141,10 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                       prefixIcon: const Icon(Icons.search, color: Colors.deepPurple),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12), 
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
@@ -159,20 +189,33 @@ class _TelaHistoricoState extends State<TelaHistorico> {
 
                             bool possuiAlerta = (nomeTeste.contains('M-CHAT') && pontuacaoObtida >= 3) ||
                                                 (nomeTeste.contains('CARS') && pontuacaoObtida >= 30) ||
-                                                (nomeTeste.contains('SNAP-IV') && pontuacaoObtida >= 12) ||
-                                                (!nomeTeste.contains('M-CHAT') && !nomeTeste.contains('CARS') && !nomeTeste.contains('SNAP-IV') && pontuacaoObtida >= 15);
+                                                (nomeTeste.contains('SNAP-IV') && pontuacaoObtida >= 12);
 
                             return Card(
                               elevation: 1,
                               margin: const EdgeInsets.only(bottom: 12.0),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.red.withOpacity(0.1),
-                                  child: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                                leading: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TelaEvolucao(
+                                          nomePaciente: nomePaciente,
+                                          nomeTeste: nomeTeste,
+                                          registrosDoPaciente: _historicoCompleto,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.deepPurple.withOpacity(0.1),
+                                    child: const Icon(Icons.analytics, color: Colors.deepPurple),
+                                  ),
                                 ),
                                 title: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // CORREGIDO: Termo alinhado corretamente
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(child: Text(nomePaciente, style: const TextStyle(fontWeight: FontWeight.bold))),
                                     Container(
@@ -183,7 +226,11 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                                       ),
                                       child: Text(
                                         possuiAlerta ? 'Alerta Clínico' : 'Típico',
-                                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: possuiAlerta ? Colors.red : Colors.green),
+                                        style: TextStyle(
+                                          fontSize: 11, 
+                                          fontWeight: FontWeight.bold, 
+                                          color: possuiAlerta ? Colors.red : Colors.green,
+                                        ),
                                       ),
                                     ),
                                   ],
