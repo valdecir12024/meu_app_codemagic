@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // ADICIONADO: Import para sanar o erro do prefs
 import '../dados/servico_historico.dart';
 import '../servicos/servicos_pdf.dart';
 
@@ -31,7 +32,6 @@ class _TelaHistoricoState extends State<TelaHistorico> {
     });
   }
 
-  // Aplicação 3: Função para limpar todo o histórico de triagens do aparelho
   Future<void> _limparHistoricoCompleto() async {
     final confirmou = await showDialog<bool>(
       context: context,
@@ -40,19 +40,21 @@ class _TelaHistoricoState extends State<TelaHistorico> {
         content: const Text('Isso apagará permanentemente todos os relatórios salvos localmente.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Apagar Tudo', style: TextStyle(color: Colors.red))),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true), 
+            child: const Text('Apagar Tudo', style: TextStyle(color: Colors.red)),
+          ),
         ],
       ),
     );
 
     if (confirmou == true) {
       try {
-        final prefs = await SharedPreferences.getInstance(); // Certifique-se de importar se necessário ou gerenciar no ServicoHistorico
+        final prefs = await SharedPreferences.getInstance();
         await prefs.remove('historico_triagens');
         _carregarDados();
       } catch (e) {
-        // Fallback seguro caso prefira limpar via função no próprio ServicoHistorico
-        debugPrint('Comando de limpeza local executado.');
+        debugPrint('Erro ao limpar histórico: $e');
       }
     }
   }
@@ -155,7 +157,6 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                             final double pontuacaoObtida = double.tryParse((item['pontuacao'] ?? 0).toString()) ?? 0.0;
                             final classificacaoClinica = item['classificacao'] ?? 'Triagem concluída.';
 
-                            // Aplicação 1: Lógica do Indicador Visual de Alerta por Pontuação
                             bool possuiAlerta = (nomeTeste.contains('M-CHAT') && pontuacaoObtida >= 3) ||
                                                 (nomeTeste.contains('CARS') && pontuacaoObtida >= 30) ||
                                                 (nomeTeste.contains('SNAP-IV') && pontuacaoObtida >= 12) ||
@@ -171,10 +172,9 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                                   child: const Icon(Icons.picture_as_pdf, color: Colors.red),
                                 ),
                                 title: Row(
-                                  mainAxisAlignment: MainAxisAlignment.between,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // CORREGIDO: Termo alinhado corretamente
                                   children: [
                                     Expanded(child: Text(nomePaciente, style: const TextStyle(fontWeight: FontWeight.bold))),
-                                    // Tag Visual de Alerta embutida na linha do título
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
