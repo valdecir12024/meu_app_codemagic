@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
 import 'tela_identificacao.dart';
 import 'tela_historico.dart';
+import 'tela_manual.dart';
+
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
 
@@ -27,6 +29,22 @@ class TelaPrincipal extends StatelessWidget {
                );
              },
            ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.menu_book),
+              tooltip: 'Guia Técnico',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TelaManual()),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.exit_to_app),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
            IconButton(
              icon: const Icon(Icons.exit_to_app),
              onPressed: () => Navigator.pop(context),
