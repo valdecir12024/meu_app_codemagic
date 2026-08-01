@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tela_questionario.dart'; // <- Garanta que esta linha está aqui
+import 'tela_questionario.dart'; // IMPORT AMARRADO: Garante a existência do método
 
 class TelaIdentificacao extends StatefulWidget {
   final String nomeDoTeste;
@@ -15,10 +15,8 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
   final _idadeController = TextEditingController();
   final _instituicaoController = TextEditingController();
   
-  // Lógica da LGPD: Controla se o termo de consentimento foi aceito
   bool _termoConsentimentoAceito = false;
 
-  // Função interna que exibe o texto jurídico completo do Termo de Consentimento
   void _exibirTextoDoTermo() {
     showDialog(
       context: context,
@@ -101,7 +99,6 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
               ),
               const SizedBox(height: 24),
               
-              // COMPONENTE LGPD: Bloco visual reativo de consentimento obrigatorio
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -138,7 +135,6 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
               const SizedBox(height: 32),
               
               ElevatedButton(
-                // O botão só executa a navegação se o formulário for válido E o termo for aceito
                 onPressed: _termoConsentimentoAceito
                     ? () {
                         if (_formKey.currentState!.validate()) {
@@ -155,7 +151,7 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
                           );
                         }
                       }
-                    : null, // Deixa o botão visualmente desativado/cinza se não marcar o Checkbox
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _termoConsentimentoAceito ? Colors.deepPurple : Colors.grey.shade400,
                   foregroundColor: Colors.white,
