@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tela_questionario.dart';
-import 'tela_manual.dart'; // Mantém o import correto do guia técnico
-import 'tela_identificacao.dart'; // <- Linha adicionada aqui
+import 'tela_manual.dart';
+import 'tela_identificacao.dart';
 import 'tela_perfil.dart';
 
 class TelaPrincipal extends StatelessWidget {
@@ -9,9 +9,9 @@ class TelaPrincipal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Configura 3 abas de navegação (Neuro, Comportamento, Socioemocional)
+    // ATUALIZADO: Agora o controlador gerencia 4 abas simultâneas
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F7),
         appBar: AppBar(
@@ -19,7 +19,6 @@ class TelaPrincipal extends StatelessWidget {
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
-          // AMARRAÇÃO CORRIGIDA: Botões superiores totalmente alinhados e fechados
           actions: [
             IconButton(
               icon: const Icon(Icons.person),
@@ -51,16 +50,18 @@ class TelaPrincipal extends StatelessWidget {
             unselectedLabelColor: Colors.white70,
             indicatorColor: Colors.white,
             indicatorWeight: 3,
+            isScrollable: true, // Permite rolar os nomes das abas suavemente se faltar espaço
             tabs: [
               Tab(icon: Icon(Icons.psychology), text: 'Neuro'),
               Tab(icon: Icon(Icons.accessibility_new), text: 'Comportamento'),
               Tab(icon: Icon(Icons.emoji_emotions), text: 'Socioemocional'),
+              Tab(icon: Icon(Icons.school), text: 'Adulto / EJA'), // Nova Aba 4 inserida
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            // Aba 1: Neuro (Alinhada com as suas escalas oficiais)
+            // Aba 1: Neuro (7 Testes)
             _construirListaTestes([
               'M-CHAT-R/F (TEA Inicial)',
               'Escala CARS (Autismo Infantil)',
@@ -71,7 +72,7 @@ class TelaPrincipal extends StatelessWidget {
               'Memória de Curto Prazo',
             ], Colors.blue),
 
-            // Aba 2: Comportamento (CORRIGIDO: Combo completo de 13 testes)
+            // Aba 2: Comportamento (13 Testes)
             _construirListaTestes([
               'SNAP-IV (TDAH e TOD Inicial)',
               'Escala Conners-3 (Conduta e Foco)',
@@ -87,7 +88,8 @@ class TelaPrincipal extends StatelessWidget {
               'Checklist de Vitimização (Bullying)',
               'Inventário Big Five (Personalidade)',
             ], Colors.orange),
-            // Aba 3: Socioemocional (CORRIGIDO: Combo completo unificado de 11 testes)
+
+            // Aba 3: Socioemocional (11 Testes)
             _construirListaTestes([
               'SDQ (Forças e Dificuldades)',
               'Escala SCARED (Ansiedade Infantil)',
@@ -101,13 +103,21 @@ class TelaPrincipal extends StatelessWidget {
               'Ideação Erotomaníaca e Apego Borderline',
               'Checklist de Triagem de Discalculia',
             ], Colors.green),
+
+            // Nova Aba 4: Adulto / EJA - Versões Completas de Rastreio (5 Testes)
+            _construirListaTestes([
+              'ASRS-18 Completa (TDAH Adulto)',
+              'Dislexia Adulto (Checklist Completo)',
+              'Escala AQ-10 Completa (Autismo Adulto)',
+              'Escala de Burnout de Freudenberger',
+              'Inventário de Depressão de Beck (BDI)',
+            ], Colors.teal),
           ],
         ),
       ),
     );
   }
 
-  // Função auxiliar unificada e protegida para desenhar a lista de testes
   Widget _construirListaTestes(List<String> testes, Color corIcone) {
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
@@ -129,7 +139,6 @@ class TelaPrincipal extends StatelessWidget {
             subtitle: const Text('Toque para iniciar a triagem inicial'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // Abre a tela de identificação empurrando o nome do teste selecionado
               Navigator.push(
                 context,
                 MaterialPageRoute(

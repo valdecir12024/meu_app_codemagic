@@ -225,6 +225,135 @@ class AnalisadorResultados {
         return 'Resultado: PROCESSAMENTO MATEMÁTICO DENTRO DO ESPERADO.\n\nHabilidades de cálculo e raciocínio lógico-matemático operando sem indicadores de alerta clínicos.';
       }
     }
+    // === BLOCOS DE DIRETRIZES DA ABA ADULTO / EJA ===
+
+    // 21. DIRETRIZES DA ESCALA ASRS-18 COMPLETA (TDAH ADULTO)
+    if (nomeDoTeste.contains('ASRS-18')) {
+      if (pontuacao >= 24) {
+        return 'Resultado ASRS-18: FORTE INDICATIVO DE TDAH EM ADULTOS (RISCO ELEVADO).\n\nEscore aponta alta frequência de sintomas de desatenção e hiperatividade/impulsividade com impacto funcional. Altamente recomendada avaliação neuropsicológica ou psiquiátrica.';
+      } if (pontuacao >= 18) {
+        return 'Resultado ASRS-18: MARCADOR DE ATENÇÃO (RISCO MODERADO).\n\nPresença de sintomas limítrofes. Sugere-se adaptações ambientais, treino de foco e monitoramento preventivo.';
+      }
+      return 'Resultado ASRS-18: DENTRO DA NORMALIDADE.\n\nSintomas de desatenção e inquietude operando abaixo do limiar de triagem clínica.';
+    }
+
+    // 22. DIRETRIZES DO CHECKLIST DE DISLEXIA ADULTO
+    if (nomeDoTeste.contains('Dislexia Adulto')) {
+      if (pontuacao >= 6) {
+        return 'Resultado: RASTREIO POSITIVO PARA TRAÇOS DE DISLEXIA EM ADULTOS.\n\nIndicadores apontam persistência de dificuldades crônicas em leitura silenciosa, escrita e processamento ortográfico. Recomendado suporte psicopedagógico focado na EJA.';
+      } else {
+        return 'Resultado: DESEMPENHO EM LEITURA DENTRO DO ESPERADO.\n\nHabilidades de processamento de escrita e leitura fluindo dentro dos parâmetros típicos.';
+      }
+    }
+
+    // 23. DIRETRIZES DA ESCALA AQ-10 COMPLETA (AUTISMO ADULTO INICIAL)
+    if (nomeDoTeste.contains('AQ-10')) {
+      if (pontuacao >= 6) {
+        return 'Resultado AQ-10: ALERTA DE TRAÇOS DO ESPECTRO AUTISTA.\n\nEscore igual ou maior que 6 indica necessidade de uma investigação clínica aprofundada para o espectro autista na vida adulta. Sugere-se encaminhamento especializado.';
+      } else {
+        return 'Resultado AQ-10: PERFIL DE RESPONSIVIDADE DENTRO DO ESPERADO.\n\nIndicadores de interação social e padrões comportamentais operando abaixo do ponto de corte.';
+      }
+    }
+
+    // 24. DIRETRIZES DA ESCALA DE BURNOUT DE FREUDENBERGER
+    if (nomeDoTeste.contains('Freudenberger')) {
+      if (pontuacao >= 20) {
+        return 'Resultado: RISCO CRÍTICO DE EXAUSTÃO EXECUTIVA (BURNOUT).\n\nEscore aponta forte sobrecarga decorrente da tripla jornada de trabalho, casa e estudos na EJA. Essencial intervenção focado na redução de estresse e suporte em saúde mental.';
+      } else {
+        return 'Resultado: NÍVEL DE ESTRESSE DENTRO DO TOLERÁVEL.\n\nIndicadores de cansaço mental ocupacional operando dentro dos parâmetros de normalidade.';
+      }
+    }
+    // 25. DIRETRIZES DO INVENTÁRIO DE DEPRESSÃO DE BECK (BDI)
+    if (nomeDoTeste.contains('Beck')) {
+      if (pontuacao >= 21) {
+        return 'Resultado BDI: INDICATIVO DE DISFORIA / DEPRESSÃO MODERADA A SEVERA.\n\nEscore aponta sofrimento psíquico acentuado com impactos diretos no humor, apetite e sono. Altamente recomendada avaliação especializada com psicólogo clínico ou médico psiquiatra.';
+      } if (pontuacao >= 12) {
+        return 'Resultado BDI: SINTOMATOLOGIA LEVE / ZONA DE ATENÇÃO.\n\nPresença de indicadores moderados de desânimo. Sugere-se escuta acolhedora, monitoramento de rotina e suporte inicial.';
+      }
+      return 'Resultado BDI: INDICE DE HUMOR DENTRO DA NORMALIDADE.\n\nIndicadores de estabilidade afetiva operando dentro dos parâmetros adaptativos esperados.';
+    }
+
+    // 26. DIRETRIZES DA TAS-20 COMPLETA (ALEXITIMIA)
+    if (nomeDoTeste.contains('TAS-20')) {
+      if (pontuacao >= 61) {
+        return 'Resultado TAS-20: PRESENÇA MARCANTE DE ALEXITIMIA.\n\nEscore indica severa dificuldade na identificação, diferenciação e expressão verbal das próprias emoções e sentimentos. Recomendado suporte psicoterápico focado em regulação emocional.';
+      } if (pontuacao >= 52) {
+        return 'Resultado TAS-20: PERFIL LIMÍTROFE.\n\nZona de transição. Apresenta dificuldades moderadas ou pontuais em traduzir sensações corporais em termos emocionais.';
+      }
+      return 'Resultado TAS-20: CAPACIDADE ADAPTATIVA PRESERVADA.\n\nProcessamento e expressão emocional fluindo sem indicadores de alerta clínicos.';
+    }
+
+    // 27. DIRETRIZES DA CAT-Q COMPLETA (CAMUFLAGEM AUTÍSTICA)
+    if (nomeDoTeste.contains('CAT-Q')) {
+      if (pontuacao >= 70) {
+        return 'Resultado CAT-Q: ALTO ÍNDICE DE CAMUFLAGEM SOCIAL (COMPENSAÇÃO).\n\nEscore aponta uso exaustivo de estratégias conscientes para imitar comportamentos e esconder dificuldades de interação. Comum em perfis subdiagnosticados (como o autismo feminino). Risco de esgotamento/burnout autístico.';
+      } else {
+        return 'Resultado CAT-Q: NÍVEL DE CAMUFLAGEM DENTRO DO ESPERADO.\n\nEstratégias de imitação social operando abaixo do limiar de sobrecarga crônica.';
+      }
+    }
+
+    // 28. DIRETRIZES DA ESCALA AQ-50 COMPLETA (AUTISMO ADULTO)
+    if (nomeDoTeste.contains('AQ-50')) {
+      if (pontuacao >= 26) {
+        return 'Resultado AQ-50: FORTE INDICATIVO DE TRAÇOS DO ESPECTRO AUTISTA (RISCO ELEVADO).\n\nEscore igual ou superior a 26 pontua significativamente nas subescalas de atenção a detalhes, comunicação e imaginação. Recomenda-se encaminhamento para investigação clínica especializada.';
+      } else {
+        return 'Resultado AQ-50: RASTREIO NEGATIVO.\n\nPadrões de comportamento e interação social operando dentro da variabilidade típica esperada.';
+      }
+    }
+    // 29. DIRETRIZES DA ESCALA GQ-ASC COMPLETA (AUTISMO FEMININO)
+    if (nomeDoTeste.contains('GQ-ASC')) {
+      if (pontuacao >= 55) {
+        return 'Resultado GQ-ASC: FORTE INDICATIVO DE NUANCES DO ESPECTRO AUTISTA (PERFIL FEMININO).\n\nEscore aponta presença crítica de marcadores sutis de camuflagem social, exaustão adaptativa e seletividade sensorial característicos da manifestação fenotípica feminina. Recomendada avaliação especializada.';
+      } else {
+        return 'Resultado GQ-ASC: RASTREIO NEGATIVO.\n\nComportamentos e reações operando dentro dos parâmetros de variabilidade típica.';
+      }
+    }
+
+    // 30. DIRETRIZES DA ESCALA SRS-2 ADULTO (RESPONSIVIDADE SOCIAL)
+    if (nomeDoTeste.contains('SRS-2')) {
+      if (pontuacao >= 40) {
+        return 'Resultado SRS-2: INDICATIVO DE COMPROMETIMENTO EM RESPONSIVIDADE SOCIAL.\n\nEscore indica dificuldades marcantes no reconhecimento de pistas sociais, comunicação recíproca e engajamento interpessoal cotidiano. Sugere-se encaminhamento clínico.';
+      } else {
+        return 'Resultado SRS-2: DESEMPENHO SOCIAL DENTRO DO ESPERADO.\n\nHabilidades de interatividade e empatia operando sem marcadores de risco.';
+      }
+    }
+
+    // 31. DIRETRIZES DA ESCALA SPM-2 ADULTO (PROCESSAMENTO SENSORIAL)
+    if (nomeDoTeste.contains('SPM-2')) {
+      if (pontuacao >= 30) {
+        return 'Resultado SPM-2: ALERTA CRÍTICO DE DISFUNÇÃO REATIVA SENSORIAL.\n\nEscore aponta forte presença de hipersensibilidades auditivas, visuais, táteis ou vestibulares com impacto severo na rotina. Recomendada consulta com Terapeuta Ocupacional especializada em Integração Sensorial.';
+      } else {
+        return 'Resultado SPM-2: INTEGRAÇÃO SENSORIAL PRESERVADA.\n\nProcessamento e resposta a estímulos ambientais operando dentro da normalidade.';
+      }
+    }
+
+    // 32. DIRETRIZES DA ESCALA RAADS-R COMPLETA (AUTISMO ADULTO)
+    if (nomeDoTeste.contains('RAADS-R')) {
+      if (pontuacao >= 26) {
+        return 'Resultado RAADS-R: FORTE INDICATIVO DE TRANSTORNO DO ESPECTRO AUTISTA (RISCO ELEVADO).\n\nEscore igual ou superior a 26 pontua criticamente em áreas cruciais de linguagem, sensório e interatividade social na vida adulta. Altamente recomendado encaminhamento para diagnóstico neuropsicológico formal.';
+      } else {
+        return 'Resultado RAADS-R: RASTREIO NEGATIVO.\n\nIndicadores de interação e interesses mantêm-se abaixo do ponto de corte clínico.';
+      }
+    }
+
+    // 33. DIRETRIZES DA ESCALA WHODAS 2.0 COMPLETA (FUNCIONALIDADE OMS)
+    if (nomeDoTeste.contains('WHODAS 2.0')) {
+      if (pontuacao >= 24) {
+        return 'Resultado WHODAS 2.0: ÍNDICE DE DEFICIÊNCIA / RESTRIÇÃO FUNCIONAL ELEVADA.\n\nEscore indica impacto severo e restrições marcantes na mobilidade, autocuidado, aprendizagem (escola/EJA) e participação social. Recomendado suporte multiprofissional.';
+      } if (pontuacao >= 12) {
+        return 'Resultado WHODAS 2.0: RESTRIÇÃO FUNCIONAL MODERADA.\n\nZona de atenção. Apresenta dificuldades pontuais no gerenciamento das rotinas diárias e estudos.';
+      }
+      return 'Resultado WHODAS 2.0: FUNCIONALIDADE PRESERVADA.\n\nCapacidade de autogestão e participação social fluindo sem restrições significativas.';
+    }
+
+    // 34. DIRETRIZES DE IDEAÇÃO EROTOMANÍACA E APEGO BORDERLINE (ADULTO)
+    if (nomeDoTeste.contains('Ideação Erotomaníaca')) {
+      if (pontuacao >= 6) {
+        return 'Resultado: RISCO CRÍTICO DE IDEAÇÃO OBSESSIVA E APEGO DESADAPTATIVO.\n\nEscore aponta forte indicativo de fixações românticas ilusórias e padrões de instabilidade interpessoal severa. Exige encaminhamento imediato para psicoterapia clínica aprofundada.';
+      } else {
+        return 'Resultado: PADRÕES AFETIVOS DENTRO DA EXPECTATIVA.\n\nNão foram identificados sinais de alerta ou fixações obsessivas nesta triagem inicial.';
+      }
+    }
 
     return 'Triagem Concluída.\n\nDados computados com sucesso para o relatório do paciente.';
   }
