@@ -1,64 +1,150 @@
 class EscalasSocioemocional {
-  // 25 Itens Oficiais de Rastreio do Questionário SDQ
-  static final List<String> perguntasSdq = [
-    '1. Tenta ser atencioso(a) com os sentimentos dos outros.',
-      '2. É inquieto(a), hiperativo(a), não consegue ficar parado(a) muito tempo.',
-      '3. Queixa-se frequentemente de dores de cabeça, de estômago ou de enjoos.',
-      '4. Divide de boa vontade as coisas com outras crianças (brinquedos, lápis, etc.).',
-      '5. Tem muitas explosões de raiva ou perde facilmente o controle.',
-      '6. É uma criança solitária, prefere brincar sozinho(a).',
-      '7. Geralmente é obediente, faz o que os adultos lhe pedem.',
-      '8. Tem muitas preocupações ou parece se preocupar com tudo.',
-      '9. É prestativo(a) se alguém está magoado, chateado ou doente.',
-      '10. Fica continuamente se mexendo na cadeira ou remexendo as mãos.',
-      '11. Tem pelo menos um(a) bom(a) amigo(a).',
-      '12. Briga frequentemente com outras crianças ou intimida os colegas.',
-      '13. Frequentemente parece triste, desanimado(a) ou choroso(a).',
-      '14. Geralmente é querido(a) por outras crianças.',
-      '15. Distrai-se facilmente, tem dificuldade para se concentrar.',
-      '16. Fica nervoso(a) ou dependente em situações novas; perde facilmente a confiança.',
-      '17. É gentil com crianças mais novas.',
-      '18. Frequentemente acusa os outros de mentir ou trapacear.',
-      '19. Sofre perseguição ou intimidação por parte de outras crianças (bullying).',
-      '20. Frequentemente oferece-se para ajudar os outros (pais, professores, crianças).',
-      '21. Pensa antes de agir.',
-      '22. Pega coisas que não são suas (em casa, na escola ou em outros lugares).',
-      '23. Dá-se melhor com adultos do que com outras crianças.',
-      '24. Tem muitos medos, assusta-se facilmente.',
-      '25. Completa as tarefas que começa; tem boa capacidade de atenção.'
-  ];
+  static const Map<String, List<String>> perguntas = {
+    // === ESCALAS ORIGINAIS DO NEUROAPP ===
+    'SDQ (Forças e Dificuldades)': [
+      '1. Tento ser atencioso(a) com os sentimentos dos outros?',
+      '2. Sou irrequieto(a), hiperativo(a), não consigo ficar parado(a) por muito tempo?',
+      '3. Tenho frequentemente dores de cabeça, dores de estômago ou mal-estar?',
+      '4. Compartilho facilmente com os outros (comida, jogos, brinquedos)?',
+      '5. Tenho acessos de raiva com frequência ou perco o controle facilmente?',
+      '6. Sou um pouco solitário(a) e tendo a brincar ou ficar mais isolado(a)?',
+      '7. Geralmente sou obediente e costumo atender aos pedidos dos adultos?',
+      '8. Tenho muitas preocupações ou pareço frequentemente ansioso(a) e tenso(a)?',
+      '9. Sou prestativo(a) se alguém se machuca, fica chateado ou se sente mal?',
+      '10. Estou sempre me agitando ou me movendo na cadeira?',
+    ],
 
-  // 10 Perguntas Oficiais de Triagem Curta da Escala SCARED (Ansiedade)
-  static final List<String> perguntasScared = [
-    '1. Sente um medo ou desconforto inexplicável quando precisa falar ou se expor em público?',
-    '2. Fica extremamente nervoso(a) ou chora quando precisa se afastar dos pais ou de casa?',
-    '3. Preocupa-se excessivamente sobre o que as outras pessoas ou colegas pensam a seu respeito?',
-    '4. Sente o coração bater muito rápido ou falta de ar quando passa por uma situação estressante?',
-    '5. Preocupa-se muito com o futuro ou com a possibilidade de coisas ruins acontecerem?',
-    '6. Tem pesadelos frequentes ou medo intenso de dormir sozinho(a) no quarto?',
-    '7. Sente-se muito tímido(a) ou desconfortável perto de pessoas que não conhece bem?',
-    '8. Preocupa-se excessivamente se faz as coisas bem feitas na escola ou tarefas?',
-    '9. Sente medo intenso ou pânico repentino sem que haja uma razão clara e real?',
-    '10. Sente medo de ir à escola ou de enfrentar ambientes sociais cheios.',
-  ];
+    'Escala SCARED (Ansiedade Infantil)': [
+      '1. Sinto medo de pessoas ou situações novas de forma muito intensa?',
+      '2. Fico muito nervoso(a) quando preciso me afastar dos meus pais ou de casa?',
+      '3. Preocupo-me excessivamente com o que vai acontecer no futuro?',
+      '4. Sinto falta de ar ou meu coração bate muito rápido quando fico assustado(a)?',
+      '5. Tenho medo de falar em público, apresentar trabalhos ou passar vergonha?',
+      '6. Preocupo-me muito se as outras pessoas gostam ou não de mim?',
+      '7. Sinto-me paralisado(a) ou com muito medo diante de testes ou avaliações?',
+      '8. Tenho pesadelos frequentes relacionados a acidentes ou perdas familiares?',
+      '9. Evito ir a lugares públicos sozinho(a) por medo de que algo ruim aconteça?',
+      '10. Sinto tremores, tonturas ou suor frio quando fico sob forte tensão?',
+    ],
 
-  // 10 Itens Oficiais Completos da Escala de Autoestima de Rosenberg
-  static final List<String> perguntasRosenberg = [
-    '1. Sente que é uma pessoa de valor, pelo menos tanto quanto as outras pessoas ao seu redor?',
-    '2. Sente que possui várias qualidades positivas e potencial para evoluir?',
-    '3. Tende a se sentir um fracasso completo quando as coisas não saem como planejado?',
-    '4. É capaz de fazer as coisas tão bem quanto a maioria das outras pessoas da sua idade?',
-    '5. Sente que não tem muito do que se orgulhar em relação às suas próprias atitudes?',
-    '6. Desenvolve uma atitude positiva e acolhedora em relação a si mesmo(a)?',
-    '7. De forma geral, sente-se totalmente satisfeito(a) consigo mesmo(a) no dia a dia?',
-    '8. Gostaria de poder ter mais respeito e admiração por si mesmo(a)?',
-    '9. Sente-se inútil ou incapaz em determinadas situações cotidianas?',
-    '10. Pensa por vezes que não é uma pessoa boa ou correta sob nenhum aspecto.',
-  ];
+    'Escala de Autoestima de Rosemberg': [
+      '1. Sinto que sou uma pessoa de valor, pelo menos tanto quanto as outras?',
+      '2. Sinto que tenho um conjunto de boas qualidades no meu jeito de ser?',
+      '3. Sou inclinado(a) a pensar que sou um(a) fracassado(a) em grande parte do tempo?',
+      '4. Sou capaz de fazer as coisas tão bem quanto a maioria das outras pessoas?',
+      '5. Sinto que não tenho muito do que me orgulhar na minha trajetória?',
+      '6. Tenho uma atitude positiva, otimista e confiante em relação a mim mesmo(a)?',
+      '7. No geral, estou muito satisfeito(a) com a pessoa que sou atualmente?',
+      '8. Gostaria de poder ter mais respeito por mim mesmo(a) do que tenho hoje?',
+      '9. Sinto-me inútil ou incapaz em determinados momentos ou tarefas?',
+      '10. Penso que, definitivamente, sou uma pessoa que não serve para nada?',
+    ],
 
-  static final Map<String, List<String>> perguntas = {
-    'Questionário SDQ (Conduta e Emoção)': perguntasSdq,
-    'Escala SCARED (Triagem de Ansiedade)': perguntasScared,
-    'Escala Rosenberg (Autoestima Inicial)': perguntasRosenberg,
-  };
-}
+    // === NOVAS ESCALAS SOLICITADAS ===
+    'Escala HADS (Ansiedade e Depressão)': [
+      '1. Sinto-se tenso(a) ou contraído(a) (com os nervos à flor da pele)?',
+      '2. Sinto o mesmo prazer de antes pelas coisas que costumava gostar?',
+      '3. Tenho uma sensação de medo ou pavor, como se algo ruim fosse acontecer?',
+      '4. Sou capaz de rir e ver o lado divertido das coisas como antes?',
+      '5. Preocupações ou pensamentos ansiosos passam pela minha mente com frequência?',
+      '6. Sinto-me alegre, otimista ou de bom humor no meu dia a dia?',
+      '7. Consigo ficar sentado(a) à vontade, relaxado(a) e sem agitação?',
+      '8. Sinto-me como se estivesse mais lento(a) para realizar minhas tarefas?',
+      '9. Tenho uma sensação ruim de estômago embrulhado ou aperto no peito por ansiedade?',
+      '10. Perdi o interesse em cuidar da minha aparência ou higiene pessoal?',
+      '11. Sinto-me inquieto(a), agitado(a) e com necessidade de ficar me movendo?',
+      '12. Olho para o futuro com otimismo e espero coisas boas da vida?',
+      '13. Tenho sensações repentinas de pânico ou desespero sem motivo aparente?',
+      '14. Consigo sentir prazer ou apreciar um bom livro, filme ou conversa?',
+    ],
+
+    'Protocolo GIFTS (Altas Habilidades)': [
+      '1. Demonstra aprendizado ultra rápido de conceitos complexos para a idade?',
+      '2. Possui vocabulário avançado, usando termos técnicos ou maduros com facilidade?',
+      '3. Manifesta curiosidade obsessiva, questionando o funcionamento profundo das coisas?',
+      '4. Apresenta soluções altamente criativas e fora do padrão para resolver problemas?',
+      '5. Mostra foco intenso (hiperfoco) e persistência em temas do seu interesse?',
+      '6. Expressa sensibilidade aguçada ou forte senso de justiça e empatia?',
+      '7. Demonstra memória de longo prazo excepcional para facts, dados ou imagens?',
+    ],
+
+    'Checklist de Triagem de Dislexia': [
+      '1. Apresenta leitura lenta, silabada, com troca ou omissão de letras e fonemas?',
+      '2. Manifesta dificuldade acentuada para associar letras aos seus sons correspondentes?',
+      '3. Demonstra lentidão excessiva para copiar textos do quadro ou de livros?',
+      '4. Confunde frequentemente a ordem das letras em palavras simples (ex: "b" e "d", "p" e "q")?',
+      '5. Tem dificuldade para compreender ou reter o sentido do texto que acabou de ler?',
+      '6. Evita ou reluta em engajar-se em atividades que exijam leitura em voz alta?',
+      '7. Apresenta erros ortográficos bizarros ou inversões de sílabas na escrita?',
+      '8. Demonstra dificuldade para memorizar rimas, sequências ou dias da semana?',
+      '9. Confunde direções espaciais básicas como esquerda, direita, acima ou abaixo?',
+      '10. Sente cansaço físico ou dores de cabeça relatadas após curtos períodos de leitura?',
+    ],
+    // 4. TRIAGEM EAT COMPLETA (10 perguntas)
+    'Triagem EAT (Transtornos Alimentares)': [
+      '1. Preocupa-se excessiva ou obsessivamente com o peso corporal e as calorias dos alimentos?',
+      '2. Evita comer quando está com fome por medo de engordar ou perder o controle?',
+      '3. Sente uma culpa intensa, arrependimento ou ansiedade logo após realizar as refeições?',
+      '4. Apresenta o comportamento de cortar a comida em pedaços milimétricos ou mastigar excessivamente?',
+      '5. Sente que a comida ou o controle do peso domina grande parte dos seus pensamentos diários?',
+      '6. Percebe sua imagem corporal de forma distorcida (sentir-se acima do peso mesmo estando magro/a)?',
+      '7. Pratica exercícios físicos de forma exaustiva ou punitiva com o único objetivo de queimar calorias?',
+      '8. Isola-se de eventos sociais ou familiares que envolvam a partilha de refeições?',
+      '9. Apresenta episódios de compulsão alimentar seguidos pelo desejo de purgação ou jejum extremo?',
+      '10. Sente-se pressionado(a) ou cobrado(a) por padrões estéticos externos e familiares?',
+    ],
+
+    // 5. IGI COMPLETO (7 perguntas)
+    'IGI (Índice de Gratidão Integral)': [
+      '1. Costuma reconhecer e valorizar as pequenas coisas positivas que acontecem no seu dia?',
+      '2. Expressa agradecimento de forma frequente às pessoas que te ajudam ou apoiam?',
+      '3. Consegue encontrar aprendizados ou pontos de resiliência mesmo diante de dias difíceis?',
+      '4. Sente-se satisfeito(a) e grato(a) pelas conquistas e pela vida que possui atualmente?',
+      '5. Reflete sobre o impacto positivo que os seus amigos e familiares exercem na sua rotina?',
+      '6. Pratica o hábito de pausar e contemplar momentos de calmaria, natureza ou bem-estar?',
+      '7. Sente que cultivar uma postura grata melhora o seu humor e o seu relacionamento com os outros?',
+    ],
+
+    // 6. MDQ COMPLETO (10 perguntas)
+    'MDQ (Rastreio de Transtorno de Humor)': [
+      '1. Já teve períodos em que se sentiu tão bem, animado(a) ou hiperativo(a) que as pessoas acharam que não era você?',
+      '2. Apresentou fases de irritabilidade extrema, a ponto de gritar com pessoas ou iniciar brigas por motivos bobos?',
+      '3. Já se sentiu tão autoconfiante, invencível ou superior aos outros de forma fora do seu comum?',
+      '4. Passou por momentos em que precisou dormir muito menos que o habitual e ainda assim manteve energia total?',
+      '5. Teve períodos em que seus pensamentos corriam de forma ultra rápida ou sua fala ficou acelerada e difícil de parar?',
+      '6. Distraiu-se com tanta facilidade por pequenos estímulos a ponto de não conseguir concluir nenhuma tarefa?',
+      '7. Apresentou episódios de impulsividade excessiva em compras, negócios ou decisões sem medir os riscos?',
+      '8. Já se envolveu em comportamentos de busca por adrenalina ou comportamentos de risco fora do seu padrão típico?',
+      '9. Essas oscilações marcantes de comportamento e energia já foram notadas ou comentadas por familiares e amigos?',
+      '10. Esses episódios de oscilação de humor já causaram prejuízos reais, brigas ou problemas no trabalho, escola ou família?',
+    ],
+
+    // 7. TRIAGEM DE IDEAÇÃO EROTOMANÍACA E APEGO BORDERLINE COMPLETO (10 perguntas)
+    'Ideação Erotomaníaca e Apego Borderline': [
+      '1. Nutre a crença fixa e intensa de que uma pessoa (geralmente de status social superior ou figura pública) está secretamente apaixonada por você?',
+      '2. Interpreta pequenos sinais casuais ou olhares de terceiros como declarações ocultas de amor ou interesse?',
+      '3. Dedica grande parte do dia em tentativas de contato (mensagens, cartas, redes sociais) com essa pessoa, mesmo sem reciprocidade?',
+      '4. Sente uma ansiedade desesperadora ou pânico diante da menor suspeita de rejeição ou distanciamento de alguém de quem é apegado(a)?',
+      '5. Costuma idealizar uma pessoa de forma extrema em um dia e, logo em seguida, passar a desvalorizá-la ou odiá-la profundamente?',
+      '6. Cria cenários fantasiosos complexos e persistentes de relacionamento amoroso com indivíduos com quem tem pouco ou nenhum vínculo real?',
+      '7. Apresenta ciúme obsessivo, controlador ou possessivo que costuma assustar ou afastar seus parceiros e amigos?',
+      '8. Já realizou comportamentos de vigilância ou perseguição (presencial ou digital) para monitorar a rotina de alguém?',
+      '9. Sente um vazio interno crônico que tenta preencher fixando-se obsessivamente na atenção de uma única pessoa?',
+      '10. Isola-se de suas obrigações diárias, familiares ou sociais para focar exclusivamente em pensamentos românticos obsessivos?',
+    ],
+
+    // 8. CHECKLIST DE TRIAGEM E SINAIS DE DISCALCULIA COMPLETO (10 perguntas)
+    'Checklist de Triagem de Discalculia': [
+      '1. Apresenta dificuldade acentuada para compreender o conceito de quantidade (ex: saber qual número é maior entre 7 e 9)?',
+      '2. Depende excessivamente do uso dos dedos para realizar contagens e somas muito simples e básicas para a idade?',
+      '3. Confunde ou inverte frequentemente os sinais das operações matemáticas básicas (como confundir "+" com "x")?',
+      '4. Manifesta enorme lentidão ou incapacidade para decorar e reter a tabuada básica na memória?',
+      '5. Tem dificuldade crônica para entender e organizar números em colunas de unidade, dezena e centena?',
+      '6. Demonstra problemas para ler e interpretar tabelas simples, gráficos ou problemas matemáticos textuais?',
+      '7. Confunde de forma recorrente numerais que possuem grafias ou sons visualmente parecidos (ex: "6" e "9", "3" e "8")?',
+      '8. Apresenta falhas acentuadas para estimar medidas simples, peso, distâncias ou o valor do troco em compras?',
+      '9. Demonstra grande dificuldade para aprender a ler as horas em relógios analógicos de ponteiro?',
+      '10. Manifesta forte ansiedade, bloqueio ou recusa emotional quando exposto(a) a tarefas que envolvam cálculos?',
+    ],
+  }; // Fecha o mapa de perguntas de forma correta
+} // Fecha a classe principal

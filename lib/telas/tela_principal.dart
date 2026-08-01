@@ -87,11 +87,19 @@ class TelaPrincipal extends StatelessWidget {
               'Checklist de Vitimização (Bullying)',
               'Inventário Big Five (Personalidade)',
             ], Colors.orange),
-            // Aba 3: Socioemocional (Alinhada com os testes de ansiedade/autoestima)
+            // Aba 3: Socioemocional (CORRIGIDO: Combo completo unificado de 11 testes)
             _construirListaTestes([
               'SDQ (Forças e Dificuldades)',
               'Escala SCARED (Ansiedade Infantil)',
               'Escala de Autoestima de Rosemberg',
+              'Escala HADS (Ansiedade e Depressão)',
+              'Protocolo GIFTS (Altas Habilidades)',
+              'Checklist de Triagem de Dislexia',
+              'Triagem EAT (Transtornos Alimentares)',
+              'IGI (Índice de Gratidão Integral)',
+              'MDQ (Rastreio de Transtorno de Humor)',
+              'Ideação Erotomaníaca e Apego Borderline',
+              'Checklist de Triagem de Discalculia',
             ], Colors.green),
           ],
         ),

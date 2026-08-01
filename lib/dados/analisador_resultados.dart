@@ -154,6 +154,77 @@ class AnalisadorResultados {
     if (nomeDoTeste.contains('Big Five')) {
       return 'Resultado Big Five: PERFIL COMPUTADO COM SUCESSO.\n\nAs tendências de Extroversão, Amabilidade, Conscienciosidade, Estabilidade Emocional e Abertura foram mapeadas para o relatório descritivo completo.';
     }
+    // 13. DIRETRIZES DA ESCALA HADS (ANSIEDADE E DEPRECÃO)
+    if (nomeDoTeste.contains('HADS')) {
+      if (pontuacao >= 11) {
+        return 'Resultado HADS: INDICATIVO CLÍNICO DE ALERTA.\n\nEscore aponta níveis elevados e críticos de sintomas ansiosos ou depressivos. Recomendável encaminhamento para avaliação especializada em saúde mental.';
+      } if (pontuacao >= 8) {
+        return 'Resultado HADS: CASO LIMÍTROFE (ZONA DE ATENÇÃO).\n\nSintomas em nível moderado. Sugere-se monitoramento preventivo e suporte emocional inicial.';
+      }
+      return 'Resultado HADS: DENTRO DA NORMALIDADE.\n\nIndicadores de ansiedade e depressão dentro dos parâmetros típicos esperados.';
+    }
+
+    // 14. DIRETRIZES DO PROTOCOLO GIFTS (ALTAS HABILIDADES)
+    if (nomeDoTeste.contains('GIFTS')) {
+      if (pontuacao >= 5) {
+        return 'Resultado GIFTS: MARCADOR DE ALTAS HABILIDADES / SUPERDOTAÇÃO (AH/SD).\n\nForte indicativo de potencial superior e criatividade avançada. Recomendado enriquecimento curricular e acompanhamento psicopedagógico especializado.';
+      } else {
+        return 'Resultado GIFTS: DESENVOLVIMENTO DENTRO DO ESPERADO.\n\nCompetências e marcos cognitivos acompanham a média típica para a faixa etária.';
+      }
+    }
+
+    // 15. DIRETRIZES DA TRIAGEM DE DISLEXIA
+    if (nomeDoTeste.contains('Dislexia')) {
+      if (pontuacao >= 6) {
+        return 'Resultado: RASTREIO POSITIVO PARA TRAÇOS DE DISLEXIA.\n\nEscore aponta marcadores significativos de dificuldade na leitura, escrita e processamento fonológico. Recomendado encaminhamento para avaliação fonoaudiológica e neuropsicopedagógica.';
+      } else {
+        return 'Resultado: DESEMPENHO EM LEITURA DENTRO DO ESPERADO.\n\nHabilidades de processamento de escrita e leitura operando sem sinais de alerta clínicos.';
+      }
+    }
+
+    // 16. DIRETRIZES DA TRIAGEM EAT (TRANSTORNOS ALIMENTARES)
+    if (nomeDoTeste.contains('EAT')) {
+      if (pontuacao >= 5) {
+        return 'Resultado EAT: ALERTA CRÍTICO DE COMPORTAMENTO ALIMENTAR.\n\nEscore aponta forte indicativo de atitudes alimentares disfuncionais ou distorção de imagem. Recomendado acompanhamento preventivo com psicólogo e nutricionista.';
+      } else {
+        return 'Resultado EAT: PERFIL ALIMENTAR SAUDÁVEL.\n\nRelação com a alimentação e percepção corporal operando dentro da normalidade.';
+      }
+    }
+    // 17. DIRETRIZES DO IGI (ÍNDICE DE GRATIDÃO INTEGRAL)
+    if (nomeDoTeste.contains('IGI')) {
+      if (pontuacao >= 21) {
+        return 'Resultado IGI: ALTO ÍNDICE DE GRATIDÃO.\n\nEscore aponta excelente nível de percepção positiva, resiliência e bem-estar subjetivo. Indicador associado a uma saúde mental estável e protetiva.';
+      } else {
+        return 'Resultado IGI: ÍNDICE DE GRATIDÃO MODERADO/BAIXO.\n\nSugerido o desenvolvimento de práticas reflexivas para fortalecimento de bem-estar emocional e enfrentamento de estresse.';
+      }
+    }
+
+    // 18. DIRETRIZES DO MDQ (RASTREIO DE TRANSTORNO DE HUMOR)
+    if (nomeDoTeste.contains('MDQ')) {
+      if (pontuacao >= 7) {
+        return 'Resultado MDQ: ALERTA DE OSCILAÇÃO DE HUMOR ACIMA DO PONTO DE CORTE.\n\nEscore indica forte presença de sintomas de instabilidade energética ou oscilações cíclicas de humor. Altamente recomendada a avaliação especializada com médico psiquiatra.';
+      } else {
+        return 'Resultado MDQ: PERFIL DE HUMOR DENTRO DA NORMALIDADE.\n\nSintomas de oscilações ou impulsividade abaixo do limiar de alerta de triagem clínica.';
+      }
+    }
+
+    // 19. DIRETRIZES DE IDEAÇÃO EROTOMANÍACA E APEGO BORDERLINE
+    if (nomeDoTeste.contains('Erotomaníaca')) {
+      if (pontuacao >= 6) {
+        return 'Resultado: RISCO CRÍTICO DE IDEAÇÃO OBSESSIVA E APEGO DESADAPTATIVO.\n\nEscore aponta forte indicativo de fixações românticas ilusórias e padrões de instabilidade interpessoal severa. Exige encaminhamento imediato para psicoterapia clínica aprofundada.';
+      } else {
+        return 'Resultado: PADRÕES AFETIVOS DENTRO DA EXPECTATIVA.\n\nNão foram identificados sinais de alerta ou fixações obsessivas nesta triagem inicial.';
+      }
+    }
+
+    // 20. DIRETRIZES DO CHECKLIST DE DISCALCULIA
+    if (nomeDoTeste.contains('Discalculia')) {
+      if (pontuacao >= 6) {
+        return 'Resultado: RASTREIO POSITIVO PARA TRAÇOS DE DISCALCULIA.\n\nEscore aponta marcadores significativos de dificuldade no processamento numérico, senso numérico e habilidades matemáticas elementares. Recomendado acompanhamento psicopedagógico especializado.';
+      } else {
+        return 'Resultado: PROCESSAMENTO MATEMÁTICO DENTRO DO ESPERADO.\n\nHabilidades de cálculo e raciocínio lógico-matemático operando sem indicadores de alerta clínicos.';
+      }
+    }
 
     return 'Triagem Concluída.\n\nDados computados com sucesso para o relatório do paciente.';
   }
