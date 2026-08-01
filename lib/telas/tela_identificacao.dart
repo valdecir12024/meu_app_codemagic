@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tela_questionario.dart';
+import 'tela_questionario.dart'; // <- Garanta que esta linha está aqui
 
 class TelaIdentificacao extends StatefulWidget {
   final String nomeDoTeste;
