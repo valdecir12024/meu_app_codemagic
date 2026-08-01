@@ -71,14 +71,22 @@ class TelaPrincipal extends StatelessWidget {
               'Memória de Curto Prazo',
             ], Colors.blue),
 
-            // Aba 2: Comportamento (Alinhada com as escalas reais)
+            // Aba 2: Comportamento (CORRIGIDO: Combo completo de 13 testes)
             _construirListaTestes([
               'SNAP-IV (TDAH e TOD Inicial)',
               'Escala Conners-3 (Conduta e Foco)',
               'Vanderbilt (Comportamento Escolar)',
               'Escala Basic 3',
+              'Escala ICU (Traços Insensíveis e Frios)',
+              'Escala CRIES-13 (Estresse Pós-Traumático)',
+              'Escala IAT (Dependência de Internet)',
+              'Escala MBI (Inventário de Burnout)',
+              'Escala CFQ (Falhas Cognitivas)',
+              'Escala MSI-BPD (Traços de Personalidade)',
+              'Escala CRAFFT 2.1 (Rastreio de Substâncias)',
+              'Checklist de Vitimização (Bullying)',
+              'Inventário Big Five (Personalidade)',
             ], Colors.orange),
-
             // Aba 3: Socioemocional (Alinhada com os testes de ansiedade/autoestima)
             _construirListaTestes([
               'SDQ (Forças e Dificuldades)',

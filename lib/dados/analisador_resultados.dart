@@ -79,6 +79,81 @@ class AnalisadorResultados {
         return 'Resultado Rosemberg: AUTOESTIMA SAUDÁVEL.\n\nPercepção de autovalorização positiva, segura e equilibrada.';
       }
     }
+    // 4. DIRETRIZES DA ESCALA ICU (TRAÇOS INSENSÍVEIS E FRIOS)
+    if (nomeDoTeste.contains('ICU')) {
+      if (pontuacao >= 25) {
+        return 'Resultado ICU: RISCO ELEVADO.\n\nEscore indica presença marcante de traços de insensibilidade emocional e rigidez comportamental. Recomendado acompanhamento psicológico focado em empatia e habilidades sociais.';
+      } else {
+        return 'Resultado ICU: DESENVOLVIMENTO TÍPICO.\n\nEscore dentro dos padrões esperados para a faixa etária. Manter monitoramento regular de conduta.';
+      }
+    }
+
+    // 5. DIRETRIZES DA ESCALA CRIES-13 (ESTRESSE PÓS-TRAUMÁTICO)
+    if (nomeDoTeste.contains('CRIES-13')) {
+      if (pontuacao >= 30) {
+        return 'Resultado CRIES-13: INDICATIVO DE ESTRESSE PÓS-TRAUMÁTICO (TEPT).\n\nPontuação severa (CRIES >= 30). Presença crítica de pensamentos intrusivos e comportamentos de esquiva. Encaminhar para intervenção psicológica especializada imediatamente.';
+      } else {
+        return 'Resultado CRIES-13: RISCO BAIXO.\n\nSintomas de estresse ou trauma abaixo do ponto de corte clínico.';
+      }
+    }
+
+    // 6. DIRETRIZES DA ESCALA IAT (DEPENDÊNCIA DE INTERNET)
+    if (nomeDoTeste.contains('IAT')) {
+      if (pontuacao >= 31) {
+        return 'Resultado IAT: DEPENDÊNCIA CRÍTICA DA INTERNET.\n\nUso problemático e abusivo de telas com prejuízos severos na rotina de sono e estudo. Recomendada orientação familiar e reestruturação de rotina com suporte terapêutico.';
+      } if (pontuacao >= 15) {
+        return 'Resultado IAT: USO MODERADO / ALERTA.\n\nZona de atenção. Apresenta sinais iniciais de distração digital. Sugere-se estabelecer limites saudáveis de tempo de tela.';
+      }
+      return 'Resultado IAT: USO SAUDÁVEL.\n\nUtilização de internet e telas dentro dos limites adaptativos.';
+    }
+
+    // 7. DIRETRIZES DA ESCALA MBI (INVENTÁRIO DE BURNOUT)
+    if (nomeDoTeste.contains('MBI')) {
+      if (pontuacao >= 22) {
+        return 'Resultado MBI: INDICATIVO DE SÍNDROME DE BURNOUT.\n\nEscore aponta exaustão emocional severa e esgotamento associado à rotina. Recomendado suporte e acompanhamento de saúde mental.';
+      } else {
+        return 'Resultado MBI: PERFIL DE ENGAJAMENTO SAUDÁVEL.\n\nNíveis de estresse e cansaço dentro dos parâmetros ocupacionais toleráveis.';
+      }
+    }
+    // 8. DIRETRIZES DA ESCALA CFQ (FALHAS COGNITIVAS)
+    if (nomeDoTeste.contains('CFQ')) {
+      if (pontuacao >= 20) {
+        return 'Resultado CFQ: ALERTA DE FALHAS COGNITIVAS.\n\nAlto índice de esquecimentos na rotina diária, lapsos de atenção e distratibilidade operacional. Sugere-se investigação neurológica ou treino cognitivo.';
+      } else {
+        return 'Resultado CFQ: DESEMPENHO OPERACIONAL ADEQUADO.\n\nMemória e atenção executiva funcionando dentro dos padrões esperados.';
+      }
+    }
+    // 9. DIRETRIZES DA ESCALA MSI-BPD (TRAÇOS DE PERSONALIDADE)
+    if (nomeDoTeste.contains('MSI-BPD')) {
+      if (pontuacao >= 7) {
+        return 'Resultado MSI-BPD: MARCADOR DE ALERTA DE PERSONALIDADE.\n\nEscore igual ou maior que 7 aponta forte presença de traços de instabilidade emocional acentuada. Recomendado encaminhamento para avaliação especializada com psiquiatra ou psicólogo clínico.';
+      } else {
+        return 'Resultado MSI-BPD: PERFIL DENTRO DA NORMALIDADE.\n\nSintomas de instabilidade afetiva ou impulsividade abaixo do limiar de triagem.';
+      }
+    }
+
+    // 10. DIRETRIZES DA ESCALA CRAFFT 2.1 (RASTREIO DE SUBSTÂNCIAS)
+    if (nomeDoTeste.contains('CRAFFT')) {
+      if (pontuacao >= 2) {
+        return 'Resultado CRAFFT 2.1: RASTREIO POSITIVO (RISCO ELEVADO).\n\nPontuação indica risco significativo associado ao uso de substâncias. Necessita de intervenção breve, orientação e encaminhamento especializado.';
+      } else {
+        return 'Resultado CRAFFT 2.1: BAIXO RISCO.\n\nNenhum padrão de uso nocivo identificado nesta triagem inicial.';
+      }
+    }
+
+    // 11. DIRETRIZES DO CHECKLIST DE VITIMIZAÇÃO (BULLYING)
+    if (nomeDoTeste.contains('Vitimização')) {
+      if (pontuacao >= 12) {
+        return 'Resultado: ALERTA CRÍTICO DE CONVIVÊNCIA ESCOLAR.\n\nEscore aponta alto índice de vitimização por bullying ou cyberbullying. Exige intervenção imediata da gestão escolar, acolhimento psicopedagógico e orientação familiar.';
+      } else {
+        return 'Resultado: AMBIENTE DE CONVIVÊNCIA DENTRO DO ESPERADO.\n\nIndicadores de vitimização pontuais ou abaixo do nível de alerta institucional.';
+      }
+    }
+
+    // 12. DIRETRIZES DO INVENTÁRIO BIG FIVE (PERSONALIDADE)
+    if (nomeDoTeste.contains('Big Five')) {
+      return 'Resultado Big Five: PERFIL COMPUTADO COM SUCESSO.\n\nAs tendências de Extroversão, Amabilidade, Conscienciosidade, Estabilidade Emocional e Abertura foram mapeadas para o relatório descritivo completo.';
+    }
 
     return 'Triagem Concluída.\n\nDados computados com sucesso para o relatório do paciente.';
   }
