@@ -32,6 +32,7 @@ class ServicoHistorico {
 
   // Função para ler todos os relatórios salvos
   static Future<List<Map<String, dynamic>>> obterHistorico() async {
+
     final prefs = await SharedPreferences.getInstance();
     List<String> listaTexto = prefs.getStringList('historico_triagens') ?? [];
     
