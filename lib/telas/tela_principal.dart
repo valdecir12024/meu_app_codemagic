@@ -3,6 +3,7 @@ import 'tela_questionario.dart';
 import 'tela_manual.dart';
 import 'tela_identificacao.dart';
 import 'tela_perfil.dart';
+import 'tela_login.dart';
 
 class TelaPrincipal extends StatelessWidget {
   const TelaPrincipal({super.key});
@@ -41,9 +42,17 @@ class TelaPrincipal extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: () => Navigator.pop(context),
-            ),
+            icon: const Icon(Icons.exit_to_app),
+              tooltip: 'Sair do Aplicativo',
+                onPressed: () {
+              // CORREÇÃO: Destrói todas as telas abertas e força a abertura limpa do Login
+                 Navigator.pushAndRemoveUntil(
+                  context,
+                    MaterialPageRoute(builder: (context) => const TelaLogin()),
+                    (route) => false,
+                  );
+                },
+              ),
           ],
           bottom: const TabBar(
             labelColor: Colors.white,

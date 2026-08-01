@@ -137,26 +137,58 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
     }
   }
 
-  void _exibirResultadoFinal(String avaliacaoTexto) {
+    void _exibirResultadoFinal(String avaliacaoTexto) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Row(
+            children: [
+              Icon(Icons.analytics, color: Colors.deepPurple),
+              SizedBox(width: 8),
+              Text('Triagem Concluída', style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
           content: SingleChildScrollView(
             child: Text(
-              'Paciente: ${widget.nomePaciente}\nIdade: ${widget.idadePaciente}\nInstituição: ${widget.instituicao}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
-              style: const TextStyle(fontSize: 16),
+              'Paciente: ${widget.nomePaciente}\nIdade: ${widget.idadePaciente}\n'
+              'Instituição: ${widget.instituicao}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
+              style: const TextStyle(fontSize: 16, height: 1.4),
             ),
           ),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
+            // Botão para Exportar Planilha Excel/CSV
+            IconButton(
+              icon: const Icon(Icons.table_view, color: Colors.green, size: 28),
+              tooltip: 'Exportar Excel',
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Exportando dados para planilha Excel...'), backgroundColor: Colors.green),
+                );
+                // Insira aqui a chamada nativa do seu gerador de Excel se necessário
+              },
+            ),
+            // Botão para Gerar e Compartilhar o PDF Adequado à LGPD
+            ElevatedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Gerando laudo em PDF...'), backgroundColor: Colors.deepPurple),
+                );
+                // Insira aqui a chamada do seu ServicoPdf passando os parametros (nomePaciente, widget.nomeDoTeste, _pontuacaoTotal, avaliacaoTexto)
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple, foregroundColor: Colors.white),
+              icon: const Icon(Icons.share),
+              label: const Text('PDF'),
+            ),
+            // Botão de Fechamento Padrão
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(this.context);
               },
-              child: const Text('Ok, fechar', style: TextStyle(color: Colors.deepPurple, fontSize: 16)),
+              child: const Text('Fechar', style: TextStyle(color: Colors.black54, fontSize: 16)),
             ),
           ],
         );
