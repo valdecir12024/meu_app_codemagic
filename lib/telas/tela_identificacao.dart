@@ -145,7 +145,7 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
                                 nomeDoTeste: widget.nomeDoTeste,
                                 nomePaciente: _nomeController.text,
                                 idadePaciente: _idadeController.text.isEmpty ? 'Não Informada' : _idadeController.text,
-                                instituicao: _instituicaoController.text.isEmpty ? 'Não Informada' : _instituicaoController.text,
+                                iInstituicao: _instituicaoController.text.isEmpty ? 'Não Informada' : _instituicaoController.text,
                               ),
                             ),
                           );

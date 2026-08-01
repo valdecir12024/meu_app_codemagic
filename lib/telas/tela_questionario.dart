@@ -3,19 +3,18 @@ import '../dados/banco_perguntas.dart';
 import '../dados/analisador_resultados.dart';
 import '../dados/servico_historico.dart';
 
-// Nome exato da classe principal que o sistema inteiro procura
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
   final String nomePaciente;
   final String idadePaciente;
-  final String instituicao;
+  final String iInstituicao;
 
   const TelaQuestionario({
     super.key, 
     required this.nomeDoTeste, 
     this.nomePaciente = 'Não Informado',
     this.idadePaciente = 'Não Informada',
-    this.instituicao = 'Não Informada',
+    this.iInstituicao = 'Não Informada',
   });
 
   @override
@@ -29,8 +28,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
   @override
   Widget build(BuildContext context) {
     final listaPerguntas = BancoPerguntas.obterPerguntas(widget.nomeDoTeste);
-        ['Nenhuma pergunta cadastrada para este teste inicial.'];
-
     double progresso = (_indicePerguntaAtual + 1) / listaPerguntas.length;
 
     bool ehMchat = widget.nomeDoTeste.contains('M-CHAT');
@@ -90,22 +87,16 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       ),
     );
   }
-
-  void _processarAcao(String alternativa, List<String> totalPerguntas) {
+  // ADICIONADO ASYNC: Permite a execução correta do await no salvamento
+  void _processarAcao(String alternativa, List<String> totalPerguntas) async {
     double pontos = 0.0;
 
-    // 1. Regra para o M-CHAT
     if (widget.nomeDoTeste.contains('M-CHAT')) {
       if (alternativa == 'Não') pontos = 1.0;
-    } 
-    // 2. CORREÇÃO: Regra exata para a CARS (Converte o botão numérico diretamente)
-    else if (widget.nomeDoTeste.contains('CARS')) {
-      // Pega o início do texto do botão (ex: "1.0", "2.0") e transforma em número decimal estável
+    } else if (widget.nomeDoTeste.contains('CARS')) {
       String apenasNumero = alternativa.split(' ').first;
       pontos = double.tryParse(apenasNumero) ?? 1.0;
-    } 
-    // 3. Regra para todas as outras escalas textuais (Frequência)
-    else {
+    } else {
       if (alternativa == 'Raramente') pontos = 1.0;
       if (alternativa == 'Às vezes') pontos = 2.0;
       if (alternativa == 'Frequentemente') pontos = 3.0;
@@ -122,22 +113,24 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       final textoAvaliacao = AnalisadorResultados.obterAvaliacao(widget.nomeDoTeste, _pontuacaoTotal);
 
       try {
-        ServicoHistorico.obterHistorico(); // Valida persistência
-        ServicoHistorico.salvarRelatorio(
-          nome: widget.nomePaciente,
+        final iniciaisPaciente = widget.nomePaciente.trim().split(' ').where((e) => e.isNotEmpty).map((e) => e[0]).join('.');
+
+        // AJUSTADO: Convertido para String (.toString()) para obedecer a assinatura String da sua persistência
+        await ServicoHistorico.salvarRelatorio(
+          nome: iniciaisPaciente.isEmpty ? 'N.I.' : '${iniciaisPaciente.toUpperCase()}.',
           teste: widget.nomeDoTeste,
-          pontuacao: _pontuacaoTotal.toString(),
+          pontuacao: _pontuacaoTotal.toString(), 
           classificacao: textoAvaliacao,
         );
       } catch (e) {
-        debugPrint('Aviso de persistência: $e');
+        debugPrint('Erro de gravação física no banco: $e');
       }
       
       _exibirResultadoFinal(textoAvaliacao);
     }
   }
 
-    void _exibirResultadoFinal(String avaliacaoTexto) {
+  void _exibirResultadoFinal(String avaliacaoTexto) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -153,28 +146,28 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           content: SingleChildScrollView(
             child: Text(
               'Paciente: ${widget.nomePaciente}\nIdade: ${widget.idadePaciente}\n'
-              'Instituição: ${widget.instituicao}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
+              'Instituição: ${widget.iInstituicao}\nPontuação: $_pontuacaoTotal pontos.\n\n$avaliacaoTexto',
               style: const TextStyle(fontSize: 16, height: 1.4),
             ),
           ),
           actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
-              // Botão Excel: Ativa o seu serviço de histórico/planilha original do projeto
             IconButton(
               icon: const Icon(Icons.table_view, color: Colors.green, size: 28),
               tooltip: 'Exportar Excel',
               onPressed: () {
-                // Remove o comentário e chama o seu exportador de CSV/Excel nativo
-                ServicoHistorico.obterHistorico(); 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Planilha exportada com sucesso!'), backgroundColor: Colors.green),
-                );
+                try {
+                  ServicoHistorico.obterHistorico(); 
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Planilha exportada com sucesso!'), backgroundColor: Colors.green),
+                  );
+                } catch (e) {
+                  debugPrint('Erro ao acionar planilha: $e');
+                }
               },
             ),
-            // Botão PDF: Ativa o compartilhamento do laudo com as regras da LGPD
             ElevatedButton.icon(
               onPressed: () {
-                // ATIVAÇÃO REAL: Despara a janela de compartilhamento do seu dispositivo
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -188,7 +181,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          // Envia os dados para a sua tela/serviço geradora de PDFs timbrados
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Abrindo gerenciador de compartilhamento...'), backgroundColor: Colors.deepPurple),
                           );
@@ -203,7 +195,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
               icon: const Icon(Icons.share),
               label: const Text('PDF'),
             ),
-              // Botão de Fechamento Padrão
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
