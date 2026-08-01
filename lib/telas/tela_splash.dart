@@ -11,6 +11,7 @@ class TelaSplash extends StatefulWidget {
 
 class _TelaSplashState extends State<TelaSplash> {
   bool _periodoExpirado = false;
+  String _numeroSerieUnico = ''; // Armazena o ID único gerado para o cliente
   final TextEditingController _codigoController = TextEditingController();
 
   @override
@@ -19,33 +20,39 @@ class _TelaSplashState extends State<TelaSplash> {
     _verificarPeriodoDeTestes();
   }
 
-  // Lógica matemática que calcula o prazo de 15 dias no celular do usuário
   Future<void> _verificarPeriodoDeTestes() async {
     final prefs = await SharedPreferences.getInstance();
     
-    // Busca a data da primeira abertura. Se não existir, grava a data de hoje.
     String? dataInstalacaoStr = prefs.getString('data_primeira_abertura');
     DateTime dataInstalacao;
 
     if (dataInstalacaoStr == null) {
       dataInstalacao = DateTime.now();
       await prefs.setString('data_primeira_abertura', dataInstalacao.toIso8601String());
+      
+      // GERAÇÃO DO ID ÚNICO: Pega os últimos 4 dígitos dos milissegundos da instalação
+      int idGerado = dataInstalacao.millisecondsSinceEpoch % 10000;
+      // Garante que o ID sempre tenha 4 dígitos (ex: 0542)
+      String idFormatado = idGerado.toString().padLeft(4, '0');
+      await prefs.setString('app_numero_serie', idFormatado);
     } else {
       dataInstalacao = DateTime.parse(dataInstalacaoStr);
     }
 
-    // Calcula a diferença de dias entre hoje e a data que o app foi aberto pela primeira vez
-    final diferencaDias = DateTime.now().difference(dataInstalacao).inDays;
+    // Recupera o número de série salvo na memória
+    setState(() {
+      _numeroSerieUnico = prefs.getString('app_numero_serie') ?? '1024';
+    });
 
-    // Se o usuário já usou a chave de liberação definitiva, pula o bloqueio
+    final diferencaDias = DateTime.now().difference(dataInstalacao).inDays;
     bool jaAtivado = prefs.getBool('app_ativado_definitivo') ?? false;
 
+    // ALERTA DE TESTE RÁPIDO: Mude o 15 para 0 se quiser ver a tela bloqueada na hora
     if (diferencaDias >= 15 && !jaAtivado) {
       setState(() {
-        _periodoExpirado = true; // Ativa a tela de bloqueio
+        _periodoExpirado = true;
       });
     } else {
-      // Se ainda estiver dentro dos 15 dias, aguarda 2 segundos e vai para o Login normal
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           Navigator.pushReplacement(
@@ -57,16 +64,18 @@ class _TelaSplashState extends State<TelaSplash> {
     }
   }
 
-  // Função para validar o código que você dará ao cliente para liberar o app
+  // LÓGICA SECRETA ANTIPIRATARIA: A chave correta é o Número de Série multiplicado por 2
   void _validarCodigoAtivacao() async {
-    // Você pode mudar esse código 'NEURO2026' para a senha que você quiser criar
-    if (_codigoController.text == 'NEURO2026') {
+    int numeroSerieInt = int.tryParse(_numeroSerieUnico) ?? 1024;
+    int chaveCorretaCalculada = numeroSerieInt * 2;
+
+    if (_codigoController.text == chaveCorretaCalculada.toString()) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('app_ativado_definitivo', true);
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Aplicativo Ativado com Sucesso!'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('Aplicativo Ativado Definitivamente!'), backgroundColor: Colors.green),
         );
         Navigator.pushReplacement(
           context,
@@ -76,12 +85,12 @@ class _TelaSplashState extends State<TelaSplash> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Código inválido. Entre em contato com o suporte.'), backgroundColor: Colors.red),
+          const SnackBar(content: Text('Chave de ativação incorreta para este dispositivo.'), backgroundColor: Colors.red),
         );
       }
     }
   }
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
@@ -99,20 +108,35 @@ class _TelaSplashState extends State<TelaSplash> {
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
+                    
+                    // Box informativo com o Número de Série Único do dispositivo
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.white30),
+                      ),
+                      child: Text(
+                        'NÚMERO DE SÉRIE: $_numeroSerieUnico',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orangeAccent, letterSpacing: 1.2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
                     const Text(
-                      'Seus 15 dias de avaliação gratuita terminaram. Para liberar o acesso definitivo às triagens, insira o código de ativação:',
+                      'Seus 15 dias de avaliação gratuita terminaram. Informe o Número de Série acima ao suporte para receber sua chave de ativação definitiva.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 14, color: Colors.white70),
                     ),
                     const SizedBox(height: 32),
                     
-                    // CORREÇÃO: Removidos os termos 'const' conflitantes e ajustada a opacidade universal
                     TextField(
                       controller: _codigoController,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        labelText: 'Código de Ativação',
+                        labelText: 'Código de Ativação Secreto',
                         labelStyle: const TextStyle(color: Colors.white70),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
