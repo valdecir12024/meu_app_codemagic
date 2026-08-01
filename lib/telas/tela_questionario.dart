@@ -94,15 +94,22 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
   void _processarAcao(String alternativa, List<String> totalPerguntas) {
     double pontos = 0.0;
 
-    if (widget.nomeDoTeste.contains('M-CHAT') && alternativa == 'Não') {
-      pontos = 1.0;
-    } else if (widget.nomeDoTeste.contains('CARS')) {
-      pontos = double.parse(alternativa);
-    } else {
+    // 1. Regra para o M-CHAT
+    if (widget.nomeDoTeste.contains('M-CHAT')) {
+      if (alternativa == 'Não') pontos = 1.0;
+    } 
+    // 2. CORREÇÃO: Regra exata para a CARS (Converte o botão numérico diretamente)
+    else if (widget.nomeDoTeste.contains('CARS')) {
+      // Pega o início do texto do botão (ex: "1.0", "2.0") e transforma em número decimal estável
+      String apenasNumero = alternativa.split(' ').first;
+      pontos = double.tryParse(apenasNumero) ?? 1.0;
+    } 
+    // 3. Regra para todas as outras escalas textuais (Frequência)
+    else {
       if (alternativa == 'Raramente') pontos = 1.0;
       if (alternativa == 'Às vezes') pontos = 2.0;
       if (alternativa == 'Frequentemente') pontos = 3.0;
-      if (alternativa == 'Sempre') Modification: pontos = 4.0;
+      if (alternativa == 'Sempre') pontos = 4.0;
     }
 
     _pontuacaoTotal += pontos;
@@ -115,6 +122,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
       final textoAvaliacao = AnalisadorResultados.obterAvaliacao(widget.nomeDoTeste, _pontuacaoTotal);
 
       try {
+        ServicoHistorico.obterHistorico(); // Valida persistência
         ServicoHistorico.salvarRelatorio(
           nome: widget.nomePaciente,
           teste: widget.nomeDoTeste,
