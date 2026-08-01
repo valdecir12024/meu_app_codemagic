@@ -26,7 +26,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
   }
 
   Future<void> _carregarDados() async {
-    final dados = await ServicoHistorico.obterHistorico(); // Ajuste para 'obtainHistorico' se for o caso
+    final dados = await ServicoHistorico.obterHistorico(); // ◄ Altere para obterHistorico
     setState(() {
       _historicoCompleto = dados;
       _historicoFiltrado = dados;

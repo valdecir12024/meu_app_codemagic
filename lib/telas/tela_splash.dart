@@ -48,7 +48,7 @@ class _TelaSplashState extends State<TelaSplash> {
     bool jaAtivado = prefs.getBool('app_ativado_definitivo') ?? false;
 
     // ALERTA DE TESTE RÁPIDO: Mude o 15 para 0 se quiser ver a tela bloqueada na hora
-    if (diferencaDias >= 0 && !jaAtivado) {
+    if (diferencaDias >= 15 && !jaAtivado) {
       setState(() {
         _periodoExpirado = true;
       });
