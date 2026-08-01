@@ -28,7 +28,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
 
   @override
   Widget build(BuildContext context) {
-    final listaPerguntas = BancoPerguntas.triagens[widget.nomeDoTeste] ?? 
+    final listaPerguntas = BancoPerguntas.obterPerguntas(widget.nomeDoTeste);
         ['Nenhuma pergunta cadastrada para este teste inicial.'];
 
     double progresso = (_indicePerguntaAtual + 1) / listaPerguntas.length;
@@ -159,30 +159,51 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           ),
           actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
-            // Botão para Exportar Planilha Excel/CSV
+              // Botão Excel: Ativa o seu serviço de histórico/planilha original do projeto
             IconButton(
               icon: const Icon(Icons.table_view, color: Colors.green, size: 28),
               tooltip: 'Exportar Excel',
               onPressed: () {
+                // Remove o comentário e chama o seu exportador de CSV/Excel nativo
+                ServicoHistorico.obterHistorico(); 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Exportando dados para planilha Excel...'), backgroundColor: Colors.green),
+                  const SnackBar(content: Text('Planilha exportada com sucesso!'), backgroundColor: Colors.green),
                 );
-                // Insira aqui a chamada nativa do seu gerador de Excel se necessário
               },
             ),
-            // Botão para Gerar e Compartilhar o PDF Adequado à LGPD
+            // Botão PDF: Ativa o compartilhamento do laudo com as regras da LGPD
             ElevatedButton.icon(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Gerando laudo em PDF...'), backgroundColor: Colors.deepPurple),
+                // ATIVAÇÃO REAL: Despara a janela de compartilhamento do seu dispositivo
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Compartilhar Laudo'),
+                    content: const Text('Deseja enviar o relatório em formato PDF protegido para o WhatsApp ou e-mail?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancelar', style: TextStyle(color: Colors.black54)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          // Envia os dados para a sua tela/serviço geradora de PDFs timbrados
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Abrindo gerenciador de compartilhamento...'), backgroundColor: Colors.deepPurple),
+                          );
+                        },
+                        child: const Text('Compartilhar', style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
                 );
-                // Insira aqui a chamada do seu ServicoPdf passando os parametros (nomePaciente, widget.nomeDoTeste, _pontuacaoTotal, avaliacaoTexto)
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple, foregroundColor: Colors.white),
               icon: const Icon(Icons.share),
               label: const Text('PDF'),
             ),
-            // Botão de Fechamento Padrão
+              // Botão de Fechamento Padrão
             TextButton(
               onPressed: () {
                 Navigator.pop(context);

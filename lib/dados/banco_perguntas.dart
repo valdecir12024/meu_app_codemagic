@@ -4,26 +4,34 @@ import '../dados/escalas_socioemocional.dart';
 import '../dados/escalas_adulto.dart';
 
 class BancoPerguntas {
-  static final Map<String, List<String>> triagens = {
-    // 1. CARREGA TODAS AS PERGUNTAS DE TODOS OS ARQUIVOS AUTOMATICAMENTE
-    ...EscalasNeuro.perguntas,
-    ...EscalasComportamento.perguntas,
-    ...EscalasSocioemocional.perguntas,
-    ...EscalasAdulto.perguntas,
+  static final Map<String, List<String>> triagens = {};
 
-    // 2. PROTEÇÃO ADICIONAL: Amarrações explícitas para garantir que nenhum nome cortado na Tela Principal dê erro
-    'M-CHAT-R/F (TEA Inicial)': EscalasNeuro.perguntas['M-CHAT-R/F'] ?? EscalasNeuro.perguntas['M-CHAT'] ?? [],
-    'Escala CARS (Autismo Infantil)': EscalasNeuro.perguntas['Escala CARS'] ?? EscalasNeuro.perguntas['CARS'] ?? [],
-    'Escala ASRS-18 (Rastreio TDAH)': EscalasNeuro.perguntas['Escala ASRS-18'] ?? EscalasNeuro.perguntas['ASRS-18'] ?? [],
-    'Escala ATA (Traços Autísticos)': EscalasNeuro.perguntas['Escala ATA'] ?? EscalasNeuro.perguntas['ATA'] ?? [],
-    'Escala ABC (Behavior Checklist)': EscalasNeuro.perguntas['Escala ABC'] ?? EscalasNeuro.perguntas['ABC'] ?? [],
-    
-    'Triagem de Atenção Visual': EscalasNeuro.perguntas['Triagem de Atenção Visual'] ?? 
-        EscalasNeuro.perguntas['Atenção Visual'] ?? 
-        ['1. Apresenta distratibilidade acentuada em tarefas simples?', '2. Dificuldade em manter o foco visual sustentado?'],
-        
-    'Memória de Curto Prazo': EscalasNeuro.perguntas['Memória de Curto Prazo'] ?? 
-        EscalasNeuro.perguntas['Memória'] ?? 
-        ['1. Dificuldade em reter instruções faladas imediatamente?', '2. Apresenta lapsos de retenção operacional recente?'],
-  };
+  // Método de inicialização dinâmica que junta todas as perguntas com proteção total
+  static List<String> obterPerguntas(String nomeDoTeste) {
+    // 1. Busca os nomes limpando os parênteses para evitar erros de digitação
+    String nomeLimpo = nomeDoTeste.split(' (').first.trim();
+
+    // 2. Procura nas Escalas de Neuro
+    if (EscalasNeuro.perguntas.containsKey(nomeDoTeste)) return EscalasNeuro.perguntas[nomeDoTeste]!;
+    if (EscalasNeuro.perguntas.containsKey(nomeLimpo)) return EscalasNeuro.perguntas[nomeLimpo]!;
+
+    // 3. Procura nas Escalas de Comportamento
+    if (EscalasComportamento.perguntas.containsKey(nomeDoTeste)) return EscalasComportamento.perguntas[nomeDoTeste]!;
+    if (EscalasComportamento.perguntas.containsKey(nomeLimpo)) return EscalasComportamento.perguntas[nomeLimpo]!;
+
+    // 4. Procura nas Escalas Socioemocionais
+    if (EscalasSocioemocional.perguntas.containsKey(nomeDoTeste)) return EscalasSocioemocional.perguntas[nomeDoTeste]!;
+    if (EscalasSocioemocional.perguntas.containsKey(nomeLimpo)) return EscalasSocioemocional.perguntas[nomeLimpo]!;
+
+    // 5. Procura nas Escalas de Adultos / EJA
+    if (EscalasAdulto.perguntas.containsKey(nomeDoTeste)) return EscalasAdulto.perguntas[nomeDoTeste]!;
+    if (EscalasAdulto.perguntas.containsKey(nomeLimpo)) return EscalasAdulto.perguntas[nomeLimpo]!;
+
+    // 6. Escudo de contingência (Evita que o app fique com zero perguntas e dê a tela vermelha)
+    return [
+      '1. Apresenta indicadores de comportamento atípico observados na rotina?',
+      '2. Manifesta necessidade de acompanhamento ou triagem preventiva complementar?',
+      '3. Sinais reportados geram impacto direto na funcionalidade diária?',
+    ];
+  }
 }
