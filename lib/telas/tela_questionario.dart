@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../dados/banco_perguntas.dart';
 import '../dados/analisador_resultados.dart';
 import '../dados/servico_historico.dart';
-
+import '../servicos/servicos_pdf.dart';
 // Nome exato da classe principal procurado pelas rotas de navegação
 class TelaQuestionario extends StatefulWidget {
   final String nomeDoTeste;
@@ -182,39 +182,56 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
             // REVISADO: Botão do Excel com tratamento de erros e snackbar
+                     // REVISADO: Acoplamento real para gerar e disparar o arquivo físico do Excel
+                     // CORREÇÃO DEFINITIVA: Botão do Excel chama o gerador de planilhas físico e abre a gaveta do celular
             IconButton(
               icon: const Icon(Icons.table_view, color: Colors.green, size: 28),
               tooltip: 'Exportar Excel',
-              onPressed: () {
-                try {
-                  ServicoHistorico.obterHistorico(); 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Planilha exportada com sucesso!'), backgroundColor: Colors.green),
-                  );
-                } catch (e) {
-                  debugPrint('Erro ao acionar planilha: $e');
-                }
+              onPressed: () async {
+                await ServicoHistorico.exportarParaExcelCSV(context);
               },
             ),
-            // REVISADO: Botão do PDF com painel reativo integrado para compartilhamento
+            
+            // CORREÇÃO DEFINITIVA: Botão do PDF acoplado diretamente ao ServicoPdf oficial
             ElevatedButton.icon(
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text('Compartilhar Laudo'),
-                    content: const Text('Deseja enviar o relatório em formato PDF protegido para o WhatsApp ou e-mail?'),
+                    content: const Text('Deseja gerar o relatório em formato PDF protegido para o WhatsApp ou e-mail?'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: const Text('Cancelar', style: TextStyle(color: Colors.black54)),
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pop(context);
+                          
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Abrindo gerenciador de compartilhamento...'), backgroundColor: Colors.deepPurple),
+                            const SnackBar(
+                              content: Text('Processando e gerando laudo em PDF...'), 
+                              backgroundColor: Colors.deepPurple
+                            ),
                           );
+
+                          // DISPARO NATIVO REAL: Invocando o método do seu arquivo servicos_pdf.dart
+                          try {
+                            final iniciais = widget.nomePaciente.trim().split(' ').where((e) => e.isNotEmpty).map((e) => e[0]).join('.');
+                            
+                            await ServicoPdf.gerarECompartilharLaudo(
+                              iniciaisPaciente: iniciais.isEmpty ? 'N.I.' : '${iniciais.toUpperCase()}.',
+                              nomeDoTeste: widget.nomeDoTeste,
+                              pontuacao: _pontuacaoTotal, // Passa o double bruto perfeitamente
+                              recomendacao: avaliacaoTexto,
+                            );
+                          } catch (e) {
+                            debugPrint('Erro ao executar motor de PDF: $e');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Erro ao gerar PDF: $e'), backgroundColor: Colors.red),
+                            );
+                          }
                         },
                         child: const Text('Compartilhar', style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold)),
                       ),
@@ -226,6 +243,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
               icon: const Icon(Icons.share),
               label: const Text('PDF'),
             ),
+            
             // Botão de Fechamento de Fluxo
             TextButton(
               onPressed: () {
