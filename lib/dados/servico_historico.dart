@@ -1,42 +1,86 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ServicoHistorico {
-  // Função para salvar uma nova triagem na memória do celular
-  static Future<void> salvarRelatorio({
+  static const String _chaveHistorico = 'neuroapp_historico_v3';
+
+  /// 1. SALVAMENTO BLINDADO: Aceita qualquer formato de pontos e grava com segurança
+  static Future<bool> salvarRelatorio({
     required String nome,
     required String teste,
-    required String pontuacao,
+    required dynamic pontuacao,
     required String classificacao,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    
-    // Puxa a lista de relatórios já existentes
-    List<String> historicoDisponivel = prefs.getStringList('historico_triagens') ?? [];
-    
-    // Cria o mapa com os dados da nova triagem atual
-    Map<String, String> novoRelatorio = {
-      'nome': nome,
-      'teste': teste,
-      'pontuacao': pontuacao,
-      'classificacao': classificacao,
-      'data': '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-    };
-    
-    // Transforma o mapa em texto (JSON) e adiciona na lista
-    historicoDisponivel.add(jsonEncode(novoRelatorio));
-    
-    // Salva a lista atualizada de volta na memória do aparelho
-    await prefs.setStringList('historico_triagens', historicoDisponivel);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final stringAtual = prefs.getString(_chaveHistorico);
+      List<dynamic> listaExistente = [];
+
+      if (stringAtual != null && stringAtual.isNotEmpty) {
+        try {
+          listaExistente = jsonDecode(stringAtual);
+        } catch (_) {
+          listaExistente = [];
+        }
+      }
+
+      // Converte qualquer entrada (seja double, int ou String) para texto limpo no JSON
+      final stringPontos = pontuacao.toString();
+
+      final novoItem = {
+        'nome': nome.trim().toUpperCase(),
+        'teste': teste.trim(),
+        'pontuacao': stringPontos,
+        'classificacao': classificacao.trim(),
+        'data': DateTime.now().toIso8601String(),
+      };
+
+      listaExistente.insert(0, novoItem);
+      return await prefs.setString(_chaveHistorico, jsonEncode(listaExistente));
+    } catch (e) {
+      debugPrint('Erro crítico de gravação física no banco: $e');
+      return false;
+    }
   }
 
-  // Função para ler todos os relatórios salvos
+  /// 2. LEITURA PADRONIZADA: Retorna a lista tratada e limpa contra nulos para a tela de histórico
   static Future<List<Map<String, dynamic>>> obterHistorico() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final stringAtual = prefs.getString(_chaveHistorico);
 
-    final prefs = await SharedPreferences.getInstance();
-    List<String> listaTexto = prefs.getStringList('historico_triagens') ?? [];
-    
-    // Converte o texto de volta para o formato de lista de mapas do Flutter
-    return listaTexto.map((item) => jsonDecode(item) as Map<String, dynamic>).toList().reversed.toList();
+      if (stringAtual == null || stringAtual.isEmpty) {
+        return [];
+      }
+
+      final List<dynamic> listaCrua = jsonDecode(stringAtual);
+      
+      // Converte e limpa o mapa de dados garantindo integridade absoluta dos campos
+      return listaCrua.map((item) {
+        final mapa = Map<String, dynamic>.from(item);
+        return {
+          'nome': mapa['nome'] ?? 'N.I.',
+          'teste': mapa['teste'] ?? 'Triagem Geral',
+          'pontuacao': mapa['pontuacao'] ?? '0',
+          'classificacao': mapa['classificacao'] ?? 'Sem dados de laudo.',
+          'data': mapa['data'] ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      debugPrint('Erro crítico na leitura do histórico local: $e');
+      return [];
+    }
+  }
+
+  /// 3. LIMPEZA DE SEGURANÇA: Permite zerar o banco em caso de testes de estresse
+  static Future<bool> limparTodoOHistorico() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return await prefs.remove(_chaveHistorico);
+    } catch (e) {
+      debugPrint('Erro ao resetar banco do histórico: $e');
+      return false;
+    }
   }
 }

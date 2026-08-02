@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'tela_questionario.dart';
 import 'tela_manual.dart';
 import 'tela_identificacao.dart';
 import 'tela_perfil.dart';
@@ -10,7 +9,6 @@ class TelaPrincipal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ATUALIZADO: Agora o controlador gerencia 4 abas simultâneas
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -42,29 +40,29 @@ class TelaPrincipal extends StatelessWidget {
               },
             ),
             IconButton(
-            icon: const Icon(Icons.exit_to_app),
+              icon: const Icon(Icons.exit_to_app),
               tooltip: 'Sair do Aplicativo',
-                onPressed: () {
-              // CORREÇÃO: Destrói todas as telas abertas e força a abertura limpa do Login
-                 Navigator.pushAndRemoveUntil(
+              onPressed: () {
+                // REVISADO: Destrói todas as telas anteriores e força o app a voltar limpo para o Login
+                Navigator.pushAndRemoveUntil(
                   context,
-                    MaterialPageRoute(builder: (context) => const TelaLogin()),
-                    (route) => false,
-                  );
-                },
-              ),
+                  MaterialPageRoute(builder: (context) => const TelaLogin()),
+                  (route) => false,
+                );
+              },
+            ),
           ],
           bottom: const TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
             indicatorColor: Colors.white,
             indicatorWeight: 3,
-            isScrollable: true, // Permite rolar os nomes das abas suavemente se faltar espaço
+            isScrollable: true,
             tabs: [
               Tab(icon: Icon(Icons.psychology), text: 'Neuro'),
               Tab(icon: Icon(Icons.accessibility_new), text: 'Comportamento'),
               Tab(icon: Icon(Icons.emoji_emotions), text: 'Socioemocional'),
-              Tab(icon: Icon(Icons.school), text: 'Adulto / EJA'), // Nova Aba 4 inserida
+              Tab(icon: Icon(Icons.school), text: 'Adulto / EJA'),
             ],
           ),
         ),
@@ -91,7 +89,7 @@ class TelaPrincipal extends StatelessWidget {
               'Escala CRIES-13 (Estresse Pós-Traumático)',
               'Escala IAT (Dependência de Internet)',
               'Escala MBI (Inventário de Burnout)',
-              'Escala CFQ (Falhas Cognitivas)',
+              'Escala ERG (Falhas Cognitivas)',
               'Escala MSI-BPD (Traços de Personalidade)',
               'Escala CRAFFT 2.1 (Rastreio de Substâncias)',
               'Checklist de Vitimização (Bullying)',
@@ -113,13 +111,21 @@ class TelaPrincipal extends StatelessWidget {
               'Checklist de Triagem de Discalculia',
             ], Colors.green),
 
-            // Nova Aba 4: Adulto / EJA - Versões Completas de Rastreio (5 Testes)
+            // Aba 4: Adulto / EJA (13 Testes Ativos)
             _construirListaTestes([
               'ASRS-18 Completa (TDAH Adulto)',
               'Dislexia Adulto (Checklist Completo)',
               'Escala AQ-10 Completa (Autismo Adulto)',
               'Escala de Burnout de Freudenberger',
               'Inventário de Depressão de Beck (BDI)',
+              'TAS-20 Completa (Alexitimia)',
+              'CAT-Q Completa (Camuflagem Autística)',
+              'Escala AQ-50 Completa (Autismo Adulto)',
+              'Escala GQ-ASC Completa (Autismo Feminino)',
+              'Escala SRS-2 Completa (Responsividade Social)',
+              'Escala SPM-2 Adulto (Sensorial)',
+              'Escala RAADS-R (Autismo Adulto)',
+              'Escala WHODAS 2.0 (Funcionalidade OMS)',
             ], Colors.teal),
           ],
         ),

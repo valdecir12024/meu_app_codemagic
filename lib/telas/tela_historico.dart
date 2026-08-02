@@ -21,10 +21,9 @@ class _TelaHistoricoState extends State<TelaHistorico> {
     _carregarDados();
   }
 
-  // MÉTODO COMPATÍVEL INTERNO: Testa as duas rotas possíveis para evitar tela preta
+  // REVISADO: Chamada direta e protegida ao método estático oficial em português
   Future<void> _carregarDados() async {
     try {
-      // Chamada direta ao método oficial em português que vimos no seu arquivo
       final dados = await ServicoHistorico.obterHistorico();
       
       setState(() {
@@ -33,7 +32,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
         _carregando = false;
       });
     } catch (e) {
-      debugPrint('Erro ao carregar histórico: $e');
+      debugPrint('Erro ao carregar histórico visual: $e');
       setState(() {
         _carregando = false;
       });
@@ -67,6 +66,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
           ? const Center(child: CircularProgressIndicator(color: Colors.deepPurple))
           : Column(
               children: [
+                // Campo de Busca Dinâmica
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
@@ -82,6 +82,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                   ),
                 ),
 
+                // Filtros rápidos por Categoria de Escala em Chips
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -94,9 +95,9 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                           label: Text(escala),
                           selected: ehSelecionado,
                           selectedColor: Colors.deepPurple,
-                          // CORREÇÃO: Customização de cor de texto via labelStyle adequada às versões novas
                           labelStyle: TextStyle(
                             color: ehSelecionado ? Colors.white : Colors.black87,
+                            fontWeight: ehSelecionado ? FontWeight.bold : FontWeight.normal,
                           ),
                           backgroundColor: Colors.white,
                           onSelected: (bool selecionado) {
@@ -111,6 +112,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                   ),
                 ),
 
+                // Listagem Proativa e Protegida dos Relatórios do Banco
                 Expanded(
                   child: _historicoFiltrado.isEmpty
                       ? const Center(
@@ -129,9 +131,11 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                             final pontuacao = item['pontuacao'] ?? '0';
                             final classificationRaw = item['classificacao'] ?? 'Sem classificação disponível.';
 
+                            // Identifica se há alerta clínico de forma reativa para colorir a tag
                             final possuiAlerta = classificationRaw.toString().contains('ALERTA') || 
                                                  classificationRaw.toString().contains('CRÍTICO') || 
-                                                 classificationRaw.toString().contains('ELEVADO');
+                                                 classificationRaw.toString().contains('ELEVADO') || 
+                                                 classificationRaw.toString().contains('GRAVE');
 
                             return Card(
                               elevation: 1,
@@ -153,6 +157,7 @@ class _TelaHistoricoState extends State<TelaHistorico> {
                                 trailing: const Icon(Icons.chevron_right),
                                 isThreeLine: true,
                                 onTap: () {
+                                  // Abre o laudo descritivo completo em uma janela limpa
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -178,4 +183,4 @@ class _TelaHistoricoState extends State<TelaHistorico> {
             ),
     );
   }
-}
+} // FECHA A CLASSE _TELAHISTORICOSTATE DE FORMA PERFEITA

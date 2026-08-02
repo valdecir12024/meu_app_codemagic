@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tela_questionario.dart'; // IMPORT AMARRADO: Garante a existência do método
+import 'tela_questionario.dart';
 
 class TelaIdentificacao extends StatefulWidget {
   final String nomeDoTeste;
@@ -24,7 +24,7 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
         title: const Text('Termo de Consentimento - LGPD', style: TextStyle(fontWeight: FontWeight.bold)),
         content: const SingleChildScrollView(
           child: Text(
-            'Em observância à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), '
+            'Em observância à Lei Geral de Protection de Dados (Lei nº 13.709/2018), '
             'os dados de saúde e neurodesenvolvimento aqui coletados destinam-se exclusivamente '
             'à triagem inicial preventiva. O profissional declara ter obtido a autorização '
             'prévia e por escrito dos pais ou responsáveis legais do menor avaliado. '
@@ -43,6 +43,7 @@ class _TelaIdentificacaoState extends State<TelaIdentificacao> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
