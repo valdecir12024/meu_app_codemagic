@@ -183,16 +183,15 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
           actions: [
             // REVISADO: Botão do Excel com tratamento de erros e snackbar
                      // REVISADO: Acoplamento real para gerar e disparar o arquivo físico do Excel
-                     // CORREÇÃO DEFINITIVA: Botão do Excel chama o gerador de planilhas físico e abre a gaveta do celular
-            IconButton(
-              icon: const Icon(Icons.table_view, color: Colors.green, size: 28),
-              tooltip: 'Exportar Excel',
-              onPressed: () async {
-                await ServicoHistorico.exportarParaExcelCSV(context);
-              },
-            ),
-            
-            // CORREÇÃO DEFINITIVA: Botão do PDF acoplado diretamente ao ServicoPdf oficial
+         IconButton(
+           icon: const Icon(Icons.table_view, color: Colors.green, size: 28),
+           tooltip: 'Exportar Excel',
+           onPressed: () async {
+             // Invoca o gerador físico de tabelas e abre a gaveta do sistema do celular
+             await ServicoHistorico.exportarParaExcelCSV(context);
+           },
+         ),
+            // REVISADO: Botão do PDF acoplado diretamente ao ServicoPdf oficial
             ElevatedButton.icon(
               onPressed: () {
                 showDialog(
@@ -220,6 +219,7 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
                           try {
                             final iniciais = widget.nomePaciente.trim().split(' ').where((e) => e.isNotEmpty).map((e) => e[0]).join('.');
                             
+                            // Adicione o import no topo do arquivo se necessário: import '../servicos/servicos_pdf.dart';
                             await ServicoPdf.gerarECompartilharLaudo(
                               iniciaisPaciente: iniciais.isEmpty ? 'N.I.' : '${iniciais.toUpperCase()}.',
                               nomeDoTeste: widget.nomeDoTeste,
@@ -243,7 +243,6 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
               icon: const Icon(Icons.share),
               label: const Text('PDF'),
             ),
-            
             // Botão de Fechamento de Fluxo
             TextButton(
               onPressed: () {

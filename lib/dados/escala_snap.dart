@@ -1,0 +1,30 @@
+class EscalaSnap {
+  static const List<String> perguntas = [
+    '1. Não consegue prestar atenção a detalhes ou comete erros por descuido.',
+    '2. Tem dificuldades para manter a atenção em tarefas ou atividades de lazer.',
+    '3. Parece não ouvir quando se fala diretamente com ele(a).',
+    '4. Não segue instruções e não termina deveres escolares ou tarefas.',
+    '5. Tem dificuldades para organizar tarefas e atividades.',
+    '6. Evita ou reluta em engajar-se em tarefas que exigem esforço mental constante.',
+    '7. Perde coisas necessárias para tarefas ou atividades.',
+    '8. Distrai-se facilmente por estímulos alheios à atividade.',
+    '9. Apresenta esquecimento em atividades diárias.',
+    '10. Move bizarramente as mãos ou os pés ou se remexe na cadeira.',
+    '11. Abandona sua cadeira em sala de aula ou outras situações.',
+    '12. Corre ou escala excessivamente em situações inadequadas.',
+    '13. Tem dificuldades para brincar ou engajar-se silenciosamente em lazer.',
+    '14. Está "a mil" ou frequentemente age como se estivesse ligado a um motor.',
+    '15. Fala em excesso sem interrupção funcional.',
+    '16. Responde precipitadamente antes de as perguntas terem sido terminadas.',
+    '17. Tem dificuldades para aguardar a sua vez.',
+    '18. Interrompe ou se intromete em conversas ou jogos de outros.',
+    '19. Descontrola-se ou perde o controle sobre o temperamento com facilidade.',
+    '20. Discute ou argumenta ativamente com adultos.',
+    '21. Desafia ativamente ou recusa-se a cumprir exigências de adultos.',
+    '22. Incomoda os outros de forma deliberada.',
+    '23. Culpa os outros pelos seus próprios erros ou mau comportamento.',
+    '24. É sensível ou facilmente incomodado pelos outros.',
+    '25. É enraivecido, ressentido ou demonstra rancor persistente.',
+    '26. É vingativo ou demonstra comportamento maldoso.'
+  ];
+}
