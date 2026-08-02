@@ -74,10 +74,13 @@ class _TelaQuestionarioState extends State<TelaQuestionario> {
                   if (ehMchat || ehAbc) ...[
                     _construirOpcao('Sim', () => _processarAcao('Sim', listaPerguntas)),
                     _construirOpcao('Não', () => _processarAcao('Não', listaPerguntas)),
-                  ] else if (ehCars) ...[
+                 ] else if (ehCars) ...[
                     _construirOpcao('1.0 - Dentro dos limites normais', () => _processarAcao('1.0', listaPerguntas)),
+                    _construirOpcao('1.5 - Sintomas muito leves', () => _processarAcao('1.5', listaPerguntas)),
                     _construirOpcao('2.0 - Autismo levemente anormal', () => _processarAcao('2.0', listaPerguntas)),
+                    _construirOpcao('2.5 - Sintomas leves a moderados', () => _processarAcao('2.5', listaPerguntas)),
                     _construirOpcao('3.0 - Autismo moderadamente anormal', () => _processarAcao('3.0', listaPerguntas)),
+                    _construirOpcao('3.5 - Sintomas moderados a graves', () => _processarAcao('3.5', listaPerguntas)),
                     _construirOpcao('4.0 - Autismo severamente anormal', () => _processarAcao('4.0', listaPerguntas)),
                   ] else ...[
                     _construirOpcao('Nunca', () => _processarAcao('Nunca', listaPerguntas)),
